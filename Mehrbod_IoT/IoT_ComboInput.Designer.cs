@@ -38,9 +38,11 @@
             // 
             // pictureBox_Pic
             // 
+            this.pictureBox_Pic.Image = global::Mehrbod_IoT.Properties.Resources.img_Internet1;
             this.pictureBox_Pic.Location = new System.Drawing.Point(12, 12);
             this.pictureBox_Pic.Name = "pictureBox_Pic";
             this.pictureBox_Pic.Size = new System.Drawing.Size(128, 128);
+            this.pictureBox_Pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_Pic.TabIndex = 0;
             this.pictureBox_Pic.TabStop = false;
             // 
@@ -119,11 +121,10 @@
         }
 
         #endregion
-
-        private PictureBox pictureBox_Pic;
-        private Label label_PromptText;
         public ComboBox comboBox1;
         private Button button_OK;
         private Button button_Cancel;
+        public PictureBox pictureBox_Pic;
+        public Label label_PromptText;
     }
 }
