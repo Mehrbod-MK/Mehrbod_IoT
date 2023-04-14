@@ -282,6 +282,7 @@
             this.button_SerialPort_Settings.Text = "تنظیمات";
             this.button_SerialPort_Settings.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button_SerialPort_Settings.UseVisualStyleBackColor = false;
+            this.button_SerialPort_Settings.Click += new System.EventHandler(this.button_SerialPort_Settings_Click);
             // 
             // pictureBox_Img_SerialPort_Handshake
             // 
@@ -415,6 +416,7 @@
             this.textBox_InternetSettings_BotToken.Location = new System.Drawing.Point(6, 87);
             this.textBox_InternetSettings_BotToken.Multiline = true;
             this.textBox_InternetSettings_BotToken.Name = "textBox_InternetSettings_BotToken";
+            this.textBox_InternetSettings_BotToken.PasswordChar = 'x';
             this.textBox_InternetSettings_BotToken.PlaceholderText = "توکن جهانی دسترسی بات تلگرام";
             this.textBox_InternetSettings_BotToken.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox_InternetSettings_BotToken.Size = new System.Drawing.Size(349, 63);
@@ -1399,7 +1401,7 @@
             this.textBox_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox_Log.Size = new System.Drawing.Size(343, 290);
             this.textBox_Log.TabIndex = 17;
-            this.textBox_Log.UseSystemPasswordChar = true;
+            this.textBox_Log.WordWrap = false;
             // 
             // IoT_ControlPanel
             // 
