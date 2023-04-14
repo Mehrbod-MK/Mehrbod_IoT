@@ -63,6 +63,26 @@ namespace Mehrbod_IoT.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ico_NO_30x30 {
+            get {
+                object obj = ResourceManager.GetObject("ico_NO_30x30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ico_OK_30x30 {
+            get {
+                object obj = ResourceManager.GetObject("ico_OK_30x30", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ico_SerialPort_AutoConnect_30x30 {
             get {
                 object obj = ResourceManager.GetObject("ico_SerialPort_AutoConnect_30x30", resourceCulture);
