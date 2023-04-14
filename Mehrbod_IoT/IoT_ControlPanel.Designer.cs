@@ -205,7 +205,7 @@
             this.button_SerialPort_AutoConnect.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_SerialPort_AutoConnect.Image = global::Mehrbod_IoT.Properties.Resources.ico_SerialPort_AutoConnect_30x30;
             this.button_SerialPort_AutoConnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_SerialPort_AutoConnect.Location = new System.Drawing.Point(142, 157);
+            this.button_SerialPort_AutoConnect.Location = new System.Drawing.Point(141, 157);
             this.button_SerialPort_AutoConnect.Name = "button_SerialPort_AutoConnect";
             this.button_SerialPort_AutoConnect.Size = new System.Drawing.Size(112, 43);
             this.button_SerialPort_AutoConnect.TabIndex = 9;
