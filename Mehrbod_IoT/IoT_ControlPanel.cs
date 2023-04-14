@@ -16,7 +16,7 @@ namespace Mehrbod_IoT
 
         private void IoT_ControlPanel_Load(object sender, EventArgs e)
         {
-            label_SerialPort_BaudRate.Text = serialPort_MehrbodIoT.BaudRate.ToString();
+            
         }
     }
 }
