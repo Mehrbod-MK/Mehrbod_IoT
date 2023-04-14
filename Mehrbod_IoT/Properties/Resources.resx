@@ -121,6 +121,9 @@
   <data name="img_SerialPort_BaudRate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_BaudRate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ico_SerialPort_AutoConnect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_SerialPort_AutoConnect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="img_SerialPort_Handshake" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_Handshake.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -133,19 +136,25 @@
   <data name="img_SerialPort_Name" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_Name.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ico_SerialPort_Connect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ico_SerialPort_Connect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="img_SerialPort_DataBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort_DataBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="img_Internet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_Internet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ico_Settings_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\ico_Settings_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ico_Telegram_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_Telegram_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_SerialPort_DataBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort_DataBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ico_SerialPort_Connect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_SerialPort_Connect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="img_SerialPort_StopBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_StopBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ico_SerialPort_AutoConnect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ico_SerialPort_AutoConnect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_WWW_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\icon_WWW_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
