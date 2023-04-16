@@ -10,6 +10,8 @@ namespace Mehrbod_IoT
     {
         public const uint _PROFILE_HEADER_VERSION = 1;
 
+        public static readonly ReplyKeyboardRemove _COMMAND_REMOVE_KEYBOARD = new ReplyKeyboardRemove();
+
         public static readonly List<string> SupportedBaudRates = new List<string>
         {
             "300",
@@ -174,15 +176,57 @@ namespace Mehrbod_IoT
                         offset = update.Id + 1;
 
                         // Check update data.
-                        // Check if input message is "text" and it is a /start message.
+                        // Check if input object is a message.
                         if(update.Message != null)
+                        {
+                            long chatID = update.Message.Chat.Id;
+
+                            // Forbid forwarded messages.
+                            if(update.Message.ForwardDate != null || update.Message.ForwardFrom != null || update.Message.ForwardFromChat != null || update.Message.ForwardFromMessageId != null || update.Message.ForwardSenderName != null || update.Message.ForwardSignature != null)
+                            {
+                                await IoT_Bot_Prompt_NoForwardingAllowed_Async(chatID, update.Message);
+                                continue;
+                            }
+
+                            // Check if input message is "text" and it is a / start message.
                             if (update.Message.Text != null)
+                            {
                                 if (update.Message.Text.ToLower() == "/start")
                                 {
                                     // Check if current ChatID is unauthorized!
-                                    if (list_Authorized_ChatIDs.FindIndex(x => x == update.Message.Chat.Id) == -1)
-                                        await IoT_Bot_Prompt_RequestAuthorization_Async(update.Message.Chat.Id, update.Message);
+                                    if (list_Authorized_ChatIDs.FindIndex(x => x == chatID) == -1)
+                                        await IoT_Bot_Prompt_RequestAuthorization_Async(chatID, update.Message);
+                                    else
+                                    {
+                                        // Prompt main menu.
+
+                                    }
                                 }
+                            }
+
+                            // Check if input message is a "Contact" object.
+                            else if(update.Message.Contact != null)
+                            {
+                                // Check if contact is unauthorized!
+                                if(list_Authorized_ChatIDs.FindIndex(x => x == chatID) == -1)
+                                {
+                                    string contact_PhoneNumber = update.Message.Contact.PhoneNumber;
+
+                                    MessageBox.Show(contact_PhoneNumber);
+
+                                    // Check if phone number is unauthorized.
+                                    if (list_Authorized_PhoneNumbers.FindIndex(x => x == contact_PhoneNumber) == -1)
+                                        await IoT_Bot_Prompt_UnauthorizedPhoneNumber_Async(chatID, update.Message);
+                                    else
+                                    {
+                                        list_Authorized_ChatIDs.Add(chatID);
+                                        IoT_Save_Profile(false, true);
+                                        await IoT_Bot_Prompt_AddedChatID_Async(chatID, update.Message);
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
                 catch(Exception ex) 
@@ -255,14 +299,17 @@ namespace Mehrbod_IoT
                 textBox_Log.AppendText(prompt);
         }
 
-        private void IoT_Request_PhoneNumber()
+        private bool IoT_Request_PhoneNumber()
         {
-            string enteredNumber = IoT_ComboInput.RequestInput("اضافه کردن شماره تلفن جدید", "لطفا شماره همراه مجاز را وارد کنید.\nنمونه:  981234567890", new string[] { }, null, String.Empty);
+            string enteredNumber = IoT_ComboInput.RequestInput("اضافه کردن شماره تلفن جدید", "لطفا شماره همراه مجاز را وارد کنید.\nنمونه:  +989019681890", new string[] { }, null, String.Empty);
 
             if (!String.IsNullOrEmpty(enteredNumber))
             {
                 list_Authorized_PhoneNumbers.Add(enteredNumber);
+                return true;
             }
+            else
+                return false;
         }
 
         private bool IoT_Save_Profile(bool confirmSave = false, bool silent = false)
@@ -376,8 +423,8 @@ namespace Mehrbod_IoT
             };
             menuItem_AddPhoneNumber.Click += (sender, e) =>
             {
-                IoT_Request_PhoneNumber();
-                IoT_Save_Profile(true);
+                if(IoT_Request_PhoneNumber())
+                    IoT_Save_Profile(true);
             };
             شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Add(menuItem_AddPhoneNumber);
         }
@@ -393,6 +440,42 @@ namespace Mehrbod_IoT
 
             if (botClient != null)
                 return await botClient.SendTextMessageAsync(chatID, promptText_ReqAuth, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, new ReplyKeyboardMarkup(KeyboardButton.WithRequestContact("📲 ارسال اطلاعات تماس به وب‌سرور")));
+            else
+                return null;
+        }
+
+        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_UnauthorizedPhoneNumber_Async(long chatID, Telegram.Bot.Types.Message replyTo)
+        {
+            string promptText_UnauthPhoneNum = "⛔ متأسفانه، شماره تلفن شما مجاز به کار با سامانه نیست.";
+
+            IoT_Log("[" + chatID.ToString() + "]\t" + "شماره تلفن غیرمجاز دریافت شد!");
+
+            if (botClient != null)
+                return await botClient.SendTextMessageAsync(chatID, promptText_UnauthPhoneNum, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, _COMMAND_REMOVE_KEYBOARD);
+            else
+                return null;
+        }
+
+        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_NoForwardingAllowed_Async(long chatID, Telegram.Bot.Types.Message replyTo)
+        {
+            string promptText_UnauthPhoneNum = "⛔ سامانه، پیام‌های هدایت شده (فوروارد شده) را نمی‌پذیرد!";
+
+            IoT_Log("[" + chatID.ToString() + "]\t" + "عدم پذیرش پیام هدایت شده (فوروارد شده).");
+
+            if (botClient != null)
+                return await botClient.SendTextMessageAsync(chatID, promptText_UnauthPhoneNum, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, _COMMAND_REMOVE_KEYBOARD);
+            else
+                return null;
+        }
+
+        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_AddedChatID_Async(long chatID, Telegram.Bot.Types.Message replyTo)
+        {
+            string promptText_AddedChatID = "✅ شماره تلفن با موفقیت تأیید و نشست کاربری شما به شماره <pre>" + chatID.ToString() + "</pre> در سامانه ثبت شد.\n\n👈 با استفاده از دستور /start می‌توانید به پنل اینترنت اشیاء دسترسی داشته باشید.";
+
+            IoT_Log("[" + chatID.ToString() + "]\t" + "تأیید شماره تلفن و اضافه شدن نشست کاربری.");
+
+            if (botClient != null)
+                return await botClient.SendTextMessageAsync(chatID, promptText_AddedChatID, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, _COMMAND_REMOVE_KEYBOARD);
             else
                 return null;
         }
