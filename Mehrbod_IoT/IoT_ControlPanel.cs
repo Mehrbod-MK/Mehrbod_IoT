@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Ports;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Mehrbod_IoT
 {
@@ -155,15 +156,15 @@ namespace Mehrbod_IoT
         /// <returns>This task returns nothing and runs asynchronously.</returns>
         protected async Task Begin_TelegramProcess()
         {
-            while(true)
+            int offset = 0;
+
+            while (true)
             {
                 if (botClient == null)
                     continue;
 
                 try
                 {
-                    int offset = 0;
-
                     foreach(var update in await botClient.GetUpdatesAsync(offset))
                     {
                         // Discard update from web server.
@@ -175,13 +176,16 @@ namespace Mehrbod_IoT
                             if (update.Message.Text != null)
                                 if (update.Message.Text.ToLower() == "/start")
                                 {
-
+                                    // Check if current ChatID is unauthorized!
+                                    if (list_Authorized_ChatIDs.FindIndex(x => x == update.Message.Chat.Id) == -1)
+                                        await IoT_Bot_Prompt_RequestAuthorization_Async(update.Message.Chat.Id, update.Message);
                                 }
                     }
                 }
                 catch(Exception ex) 
                 {
                     IoT_Log("ارتباط با وب‌سرور با اختلال روبه‌رو شد:\t" + ex.Message);
+                    continue;
                 }
             }
         }
@@ -337,6 +341,19 @@ namespace Mehrbod_IoT
                 stream.Dispose();
                 return false;
             }
+        }
+
+        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_RequestAuthorization_Async(long chatID, Telegram.Bot.Types.Message replyTo)
+        {
+            string promptText_ReqAuth = "سلام و درود ویژه خدمت شما کاربر گرامی. 👋\n\n" +
+                "🙏 به سامانه اینرنت اشیاء مهربد ملاکاظمی خوبده خوش آمدید.\n" +
+                "⛔ نشست کاربری فعلی شما در سامانه مجاز به فعالیت نمی‌باشد.\n" +
+                "👇 با زدن دکمه ذیل، شماره تلفن همراه شما بررسی شده و اگر مجاز به کار با سامانه بودید، دسترسی مربوطه به شما داده خواهد شد.";
+
+            if (botClient != null)
+                return await botClient.SendTextMessageAsync(chatID, promptText_ReqAuth, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, new ReplyKeyboardMarkup(KeyboardButton.WithRequestContact("📲 ارسال اطلاعات تماس به وب‌سرور")));
+            else
+                return null;
         }
     }
 }
