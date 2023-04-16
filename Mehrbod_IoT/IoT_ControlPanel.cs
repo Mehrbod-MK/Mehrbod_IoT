@@ -292,11 +292,23 @@ namespace Mehrbod_IoT
 
         private bool IoT_Load_Profile(bool silent = true)
         {
+            FileStream? stream;
+            BinaryReader? binReader;
+
             try
             {
-                FileStream stream = new FileStream(Environment.CurrentDirectory + @"\mehrbod_iot.conf", FileMode.Open, FileAccess.Read);
-                BinaryReader binReader = new BinaryReader(stream);
+                stream = new FileStream(Environment.CurrentDirectory + @"\mehrbod_iot.conf", FileMode.Open, FileAccess.Read);
+                binReader = new BinaryReader(stream);
+            }
+            catch(Exception ex)
+            {
+                if (!silent)
+                    MessageBox.Show("خطا در دسترسی به فایل پیکربندی برنامه. جزئیات خطا به شرح ذیل می‌باشد:\n\n" + ex.Message, "خطا در نوشتن فایل پیکربندی!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                return false;
+            }
 
+            try
+            {
                 // Read header data.
                 if (binReader.ReadChar() != 'M' || binReader.ReadChar() != 'M' || binReader.ReadChar() != 'K')
                     throw new Exception("هدر فایل پیکربندی آسیب دیده است!");
@@ -322,6 +334,7 @@ namespace Mehrbod_IoT
             {
                 if(!silent)
                     MessageBox.Show("خطا در خواندن فایل پیکربندی برنامه. جزئیات خطا به شرح ذیل می‌باشد:\n\n" + ex.Message, "خطا در نوشتن فایل پیکربندی!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                stream.Dispose();
                 return false;
             }
         }
