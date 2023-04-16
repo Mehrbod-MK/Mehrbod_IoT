@@ -259,8 +259,12 @@ namespace Mehrbod_IoT
             }
         }
 
-        private bool IoT_Save_Profile(bool silent = false)
+        private bool IoT_Save_Profile(bool confirmSave = false, bool silent = false)
         {
+            if (confirmSave)
+                if (MessageBox.Show("آیا مایل به ذخیره تغییرات هستید؟", "سؤال", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign) == DialogResult.No)
+                    return false;
+
             try
             {
                 FileStream stream = new FileStream(Environment.CurrentDirectory + @"\mehrbod_iot.conf", FileMode.Create, FileAccess.Write);
@@ -343,6 +347,35 @@ namespace Mehrbod_IoT
             }
         }
 
+        private void IoT_Generate_Menus_AuthorizedPhoneNumbers()
+        {
+            شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Clear();
+
+            foreach (var phoneNum in list_Authorized_PhoneNumbers)
+            {
+                ToolStripMenuItem menuItem = new ToolStripMenuItem()
+                {
+                    AutoToolTip = true,
+                    Text = phoneNum,
+                };
+
+                شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Add(menuItem);
+            }
+
+            شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            ToolStripMenuItem menuItem_AddPhoneNumber = new ToolStripMenuItem()
+            {
+                AutoToolTip = true,
+                Text = "اضافه کردن شماره تلفن جدید",
+            };
+            menuItem_AddPhoneNumber.Click += (sender, e) =>
+            {
+                IoT_Request_PhoneNumber();
+                IoT_Save_Profile(true);
+            };
+            شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Add(menuItem_AddPhoneNumber);
+        }
+
         private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_RequestAuthorization_Async(long chatID, Telegram.Bot.Types.Message replyTo)
         {
             string promptText_ReqAuth = "سلام و درود ویژه خدمت شما کاربر گرامی. 👋\n\n" +
@@ -354,6 +387,11 @@ namespace Mehrbod_IoT
                 return await botClient.SendTextMessageAsync(chatID, promptText_ReqAuth, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, new ReplyKeyboardMarkup(KeyboardButton.WithRequestContact("📲 ارسال اطلاعات تماس به وب‌سرور")));
             else
                 return null;
+        }
+
+        private void اینترنتToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            IoT_Generate_Menus_AuthorizedPhoneNumbers();
         }
     }
 }

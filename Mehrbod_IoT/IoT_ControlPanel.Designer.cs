@@ -1403,6 +1403,7 @@
             this.اینترنتToolStripMenuItem.Name = "اینترنتToolStripMenuItem";
             this.اینترنتToolStripMenuItem.Size = new System.Drawing.Size(96, 34);
             this.اینترنتToolStripMenuItem.Text = "اینترنت";
+            this.اینترنتToolStripMenuItem.DropDownOpening += new System.EventHandler(this.اینترنتToolStripMenuItem_DropDownOpening);
             // 
             // شمارهتلفنهایمجازToolStripMenuItem
             // 
