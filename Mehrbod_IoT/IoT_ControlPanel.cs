@@ -207,6 +207,13 @@ namespace Mehrbod_IoT
                             // Check if input message is a "Contact" object.
                             else if(update.Message.Contact != null)
                             {
+                                // Check fake forwarded contact object.
+                                if (update.Message.ReplyToMessage == null)
+                                {
+                                    await IoT_Bot_Prompt_NoForwardingAllowed_Async(chatID, update.Message);
+                                    continue;
+                                }
+
                                 // Check if contact is unauthorized!
                                 if(list_Authorized_ChatIDs.FindIndex(x => x == chatID) == -1)
                                 {
@@ -305,8 +312,13 @@ namespace Mehrbod_IoT
 
             if (!String.IsNullOrEmpty(enteredNumber))
             {
-                list_Authorized_PhoneNumbers.Add(enteredNumber);
-                return true;
+                if (list_Authorized_PhoneNumbers.FindIndex(x => x == enteredNumber) == -1)
+                {
+                    list_Authorized_PhoneNumbers.Add(enteredNumber);
+                    return true;
+                }
+                else
+                    return false;
             }
             else
                 return false;
@@ -483,6 +495,25 @@ namespace Mehrbod_IoT
         private void اینترنتToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             IoT_Generate_Menus_AuthorizedPhoneNumbers();
+        }
+
+        private void حذفپیکربندیToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("آیا از حذف تمامی تنظیمات برنامه، اعم از اطلاعات تماس‌ها و چت‌ها هستید؟\nاین عملیات غیر قابل بازگشت خواهد بود.", "هشدار!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign) == DialogResult.Yes)
+            {
+                list_Authorized_ChatIDs.Clear();
+                list_Authorized_PhoneNumbers.Clear();
+
+                try
+                {
+                    File.Delete(Environment.CurrentDirectory + @"\mehrbod_iot.conf");
+                    MessageBox.Show("فایل پیکربندی با موفقیت حذف شد و تنظیمات از نو شدند.", "عملیات موفق", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                }
+                catch(Exception ex) 
+                {
+                    MessageBox.Show("خطا در تازه‌سازی تنظیمات پیکربندی. جزئیات خطا به شرح ذیل می‌باشد:\n\n" + ex.Message, "خطا در انجام عملیات", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
+                }
+            }
         }
     }
 }

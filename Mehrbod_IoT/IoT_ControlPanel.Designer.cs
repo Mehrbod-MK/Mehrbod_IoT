@@ -124,6 +124,8 @@
             this.menuStrip_MehrodIoT_MainMenu = new System.Windows.Forms.MenuStrip();
             this.پروندهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ذخیرهپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.بازآوریپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.حذفپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.دستگاهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.اینترنتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.شمارهتلفنهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1376,7 +1378,9 @@
             // پروندهToolStripMenuItem
             // 
             this.پروندهToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ذخیرهپیکربندیToolStripMenuItem});
+            this.ذخیرهپیکربندیToolStripMenuItem,
+            this.بازآوریپیکربندیToolStripMenuItem,
+            this.حذفپیکربندیToolStripMenuItem});
             this.پروندهToolStripMenuItem.Name = "پروندهToolStripMenuItem";
             this.پروندهToolStripMenuItem.Size = new System.Drawing.Size(59, 34);
             this.پروندهToolStripMenuItem.Text = "برنامه";
@@ -1385,8 +1389,24 @@
             // 
             this.ذخیرهپیکربندیToolStripMenuItem.Name = "ذخیرهپیکربندیToolStripMenuItem";
             this.ذخیرهپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.ذخیرهپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.ذخیرهپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
             this.ذخیرهپیکربندیToolStripMenuItem.Text = "ذخیره پیکربندی";
+            // 
+            // بازآوریپیکربندیToolStripMenuItem
+            // 
+            this.بازآوریپیکربندیToolStripMenuItem.Name = "بازآوریپیکربندیToolStripMenuItem";
+            this.بازآوریپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+            this.بازآوریپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.بازآوریپیکربندیToolStripMenuItem.Text = "بازآوری پیکربندی";
+            // 
+            // حذفپیکربندیToolStripMenuItem
+            // 
+            this.حذفپیکربندیToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.ico_NO_30x30;
+            this.حذفپیکربندیToolStripMenuItem.Name = "حذفپیکربندیToolStripMenuItem";
+            this.حذفپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Delete)));
+            this.حذفپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.حذفپیکربندیToolStripMenuItem.Text = "حذف پیکربندی";
+            this.حذفپیکربندیToolStripMenuItem.Click += new System.EventHandler(this.حذفپیکربندیToolStripMenuItem_Click);
             // 
             // دستگاهToolStripMenuItem
             // 
@@ -1408,7 +1428,7 @@
             // شمارهتلفنهایمجازToolStripMenuItem
             // 
             this.شمارهتلفنهایمجازToolStripMenuItem.Name = "شمارهتلفنهایمجازToolStripMenuItem";
-            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(220, 26);
             this.شمارهتلفنهایمجازToolStripMenuItem.Text = "شماره تلفن‌های مجاز";
             // 
             // groupBox_Reports
@@ -1588,5 +1608,7 @@
         private ToolStripMenuItem اینترنتToolStripMenuItem;
         private ToolStripMenuItem شمارهتلفنهایمجازToolStripMenuItem;
         private ToolStripMenuItem ذخیرهپیکربندیToolStripMenuItem;
+        private ToolStripMenuItem بازآوریپیکربندیToolStripMenuItem;
+        private ToolStripMenuItem حذفپیکربندیToolStripMenuItem;
     }
 }
