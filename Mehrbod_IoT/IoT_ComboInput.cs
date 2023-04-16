@@ -31,6 +31,7 @@ namespace Mehrbod_IoT
             
         }
 
+        // public static string? RequestInput(string windowTitle, string promptText, string[] comboItems, Image? pic = null, string? defaultResponse = "")
         public static string RequestInput(string windowTitle, string promptText, string[] comboItems, Image? pic = null, string defaultResponse = "")
         {
             IoT_ComboInput comboInput = new IoT_ComboInput(comboItems, defaultResponse);

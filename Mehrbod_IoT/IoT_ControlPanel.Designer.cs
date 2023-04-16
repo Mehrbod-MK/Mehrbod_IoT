@@ -123,7 +123,10 @@
             this.pictureBox_Objects_LED_Red = new System.Windows.Forms.PictureBox();
             this.menuStrip_MehrodIoT_MainMenu = new System.Windows.Forms.MenuStrip();
             this.پروندهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ذخیرهپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.دستگاهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.اینترنتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.شمارهتلفنهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Reports = new System.Windows.Forms.GroupBox();
             this.textBox_Log = new System.Windows.Forms.TextBox();
             this.groupBox_Settings_SerialPort.SuspendLayout();
@@ -166,7 +169,7 @@
             this.groupBox_Settings_SerialPort.Controls.Add(this.pictureBox_Img_SerialPort_PortName);
             this.groupBox_Settings_SerialPort.Controls.Add(this.pictureBox_Img_SerialPort);
             this.groupBox_Settings_SerialPort.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.groupBox_Settings_SerialPort.Location = new System.Drawing.Point(12, 31);
+            this.groupBox_Settings_SerialPort.Location = new System.Drawing.Point(12, 43);
             this.groupBox_Settings_SerialPort.Name = "groupBox_Settings_SerialPort";
             this.groupBox_Settings_SerialPort.Size = new System.Drawing.Size(391, 206);
             this.groupBox_Settings_SerialPort.TabIndex = 0;
@@ -266,6 +269,7 @@
             this.button_SerialPort_Connect.TabIndex = 8;
             this.button_SerialPort_Connect.Text = "اتصال";
             this.button_SerialPort_Connect.UseVisualStyleBackColor = false;
+            this.button_SerialPort_Connect.Click += new System.EventHandler(this.button_SerialPort_Connect_Click);
             // 
             // button_SerialPort_Settings
             // 
@@ -375,8 +379,9 @@
             this.groupBox_Settings_Internet.Controls.Add(this.textBox_InternetSettings_BotToken);
             this.groupBox_Settings_Internet.Controls.Add(this.pictureBox_InternetSettings_BotToken);
             this.groupBox_Settings_Internet.Controls.Add(this.label_InternetSettings_BotToken);
+            this.groupBox_Settings_Internet.Enabled = false;
             this.groupBox_Settings_Internet.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.groupBox_Settings_Internet.Location = new System.Drawing.Point(409, 31);
+            this.groupBox_Settings_Internet.Location = new System.Drawing.Point(409, 43);
             this.groupBox_Settings_Internet.Name = "groupBox_Settings_Internet";
             this.groupBox_Settings_Internet.Size = new System.Drawing.Size(361, 206);
             this.groupBox_Settings_Internet.TabIndex = 1;
@@ -409,6 +414,7 @@
             this.button_Internet_EstablishConnection.TabIndex = 9;
             this.button_Internet_EstablishConnection.Text = "ارسال درخواست HTTPS به وب‌سرور";
             this.button_Internet_EstablishConnection.UseVisualStyleBackColor = false;
+            this.button_Internet_EstablishConnection.Click += new System.EventHandler(this.button_Internet_EstablishConnection_Click);
             // 
             // textBox_InternetSettings_BotToken
             // 
@@ -455,7 +461,7 @@
             this.groupBox_Things.Controls.Add(this.pictureBox_Objects_LED_Red);
             this.groupBox_Things.Enabled = false;
             this.groupBox_Things.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.groupBox_Things.Location = new System.Drawing.Point(12, 241);
+            this.groupBox_Things.Location = new System.Drawing.Point(12, 253);
             this.groupBox_Things.Name = "groupBox_Things";
             this.groupBox_Things.Size = new System.Drawing.Size(391, 339);
             this.groupBox_Things.TabIndex = 2;
@@ -1359,35 +1365,62 @@
             this.menuStrip_MehrodIoT_MainMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip_MehrodIoT_MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.پروندهToolStripMenuItem,
-            this.دستگاهToolStripMenuItem});
+            this.دستگاهToolStripMenuItem,
+            this.اینترنتToolStripMenuItem});
             this.menuStrip_MehrodIoT_MainMenu.Location = new System.Drawing.Point(0, 0);
             this.menuStrip_MehrodIoT_MainMenu.Name = "menuStrip_MehrodIoT_MainMenu";
-            this.menuStrip_MehrodIoT_MainMenu.Size = new System.Drawing.Size(782, 28);
+            this.menuStrip_MehrodIoT_MainMenu.Size = new System.Drawing.Size(782, 38);
             this.menuStrip_MehrodIoT_MainMenu.TabIndex = 3;
             this.menuStrip_MehrodIoT_MainMenu.Text = "menuStrip1";
             // 
             // پروندهToolStripMenuItem
             // 
+            this.پروندهToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ذخیرهپیکربندیToolStripMenuItem});
             this.پروندهToolStripMenuItem.Name = "پروندهToolStripMenuItem";
-            this.پروندهToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
+            this.پروندهToolStripMenuItem.Size = new System.Drawing.Size(59, 34);
             this.پروندهToolStripMenuItem.Text = "برنامه";
+            // 
+            // ذخیرهپیکربندیToolStripMenuItem
+            // 
+            this.ذخیرهپیکربندیToolStripMenuItem.Name = "ذخیرهپیکربندیToolStripMenuItem";
+            this.ذخیرهپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.ذخیرهپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.ذخیرهپیکربندیToolStripMenuItem.Text = "ذخیره پیکربندی";
             // 
             // دستگاهToolStripMenuItem
             // 
             this.دستگاهToolStripMenuItem.Name = "دستگاهToolStripMenuItem";
-            this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(83, 34);
             this.دستگاهToolStripMenuItem.Text = "دستگاه‌ها";
+            // 
+            // اینترنتToolStripMenuItem
+            // 
+            this.اینترنتToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.شمارهتلفنهایمجازToolStripMenuItem});
+            this.اینترنتToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.icon_WWW_30x30;
+            this.اینترنتToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.اینترنتToolStripMenuItem.Name = "اینترنتToolStripMenuItem";
+            this.اینترنتToolStripMenuItem.Size = new System.Drawing.Size(96, 34);
+            this.اینترنتToolStripMenuItem.Text = "اینترنت";
+            // 
+            // شمارهتلفنهایمجازToolStripMenuItem
+            // 
+            this.شمارهتلفنهایمجازToolStripMenuItem.Name = "شمارهتلفنهایمجازToolStripMenuItem";
+            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.شمارهتلفنهایمجازToolStripMenuItem.Text = "شماره تلفن‌های مجاز";
             // 
             // groupBox_Reports
             // 
             this.groupBox_Reports.Controls.Add(this.textBox_Log);
+            this.groupBox_Reports.Enabled = false;
             this.groupBox_Reports.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.groupBox_Reports.Location = new System.Drawing.Point(415, 241);
+            this.groupBox_Reports.Location = new System.Drawing.Point(415, 253);
             this.groupBox_Reports.Name = "groupBox_Reports";
             this.groupBox_Reports.Size = new System.Drawing.Size(355, 339);
             this.groupBox_Reports.TabIndex = 4;
             this.groupBox_Reports.TabStop = false;
-            this.groupBox_Reports.Text = "گزارش‌ها";
+            this.groupBox_Reports.Text = "گزارش‌های اینترنت";
             // 
             // textBox_Log
             // 
@@ -1396,7 +1429,7 @@
             this.textBox_Log.Location = new System.Drawing.Point(6, 33);
             this.textBox_Log.Multiline = true;
             this.textBox_Log.Name = "textBox_Log";
-            this.textBox_Log.PlaceholderText = "گزارش‌های تولید شده";
+            this.textBox_Log.PlaceholderText = "گزارش‌های تولید شده توسط وب‌سرور";
             this.textBox_Log.ReadOnly = true;
             this.textBox_Log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox_Log.Size = new System.Drawing.Size(343, 290);
@@ -1408,7 +1441,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(782, 592);
+            this.ClientSize = new System.Drawing.Size(782, 600);
             this.Controls.Add(this.groupBox_Reports);
             this.Controls.Add(this.groupBox_Things);
             this.Controls.Add(this.groupBox_Settings_Internet);
@@ -1551,5 +1584,8 @@
         private PictureBox pictureBox1;
         private GroupBox groupBox_Reports;
         private TextBox textBox_Log;
+        private ToolStripMenuItem اینترنتToolStripMenuItem;
+        private ToolStripMenuItem شمارهتلفنهایمجازToolStripMenuItem;
+        private ToolStripMenuItem ذخیرهپیکربندیToolStripMenuItem;
     }
 }
