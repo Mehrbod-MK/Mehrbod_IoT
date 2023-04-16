@@ -44,6 +44,9 @@ namespace Mehrbod_IoT
 
         private void IoT_ControlPanel_Load(object sender, EventArgs e)
         {
+            string[] availablePorts = SerialPort.GetPortNames();
+            serialPort_MehrbodIoT.PortName = (availablePorts.Length > 0) ? availablePorts[0] : serialPort_MehrbodIoT.PortName;
+
             UpdateUI_SerialPort();
 
             if(!IoT_Load_Profile())
@@ -246,7 +249,10 @@ namespace Mehrbod_IoT
             if (appendCR)
                 prompt += "\r\n";
 
-            textBox_Log.AppendText(prompt);
+            if(InvokeRequired)
+                Invoke(() => { textBox_Log.AppendText(prompt); });
+            else
+                textBox_Log.AppendText(prompt);
         }
 
         private void IoT_Request_PhoneNumber()
@@ -382,6 +388,8 @@ namespace Mehrbod_IoT
                 "🙏 به سامانه اینرنت اشیاء مهربد ملاکاظمی خوبده خوش آمدید.\n" +
                 "⛔ نشست کاربری فعلی شما در سامانه مجاز به فعالیت نمی‌باشد.\n" +
                 "👇 با زدن دکمه ذیل، شماره تلفن همراه شما بررسی شده و اگر مجاز به کار با سامانه بودید، دسترسی مربوطه به شما داده خواهد شد.";
+
+            IoT_Log("[" + chatID.ToString() + "]\t" + "نشست کاربری غیرمجاز دکمه شروع را زد.");
 
             if (botClient != null)
                 return await botClient.SendTextMessageAsync(chatID, promptText_ReqAuth, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, replyTo.MessageId, true, new ReplyKeyboardMarkup(KeyboardButton.WithRequestContact("📲 ارسال اطلاعات تماس به وب‌سرور")));
