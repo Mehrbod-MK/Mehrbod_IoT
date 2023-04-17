@@ -223,9 +223,29 @@ namespace Mehrbod_IoT.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap obj_PIR {
+            get {
+                object obj = ResourceManager.GetObject("obj_PIR", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap obj_PIR_Idle {
             get {
                 object obj = ResourceManager.GetObject("obj_PIR_Idle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap obj_PIR_Triggered {
+            get {
+                object obj = ResourceManager.GetObject("obj_PIR_Triggered", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -253,6 +273,16 @@ namespace Mehrbod_IoT.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap objects_BlueLED_On {
+            get {
+                object obj = ResourceManager.GetObject("objects_BlueLED_On", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap objects_GreenLED_Off {
             get {
                 object obj = ResourceManager.GetObject("objects_GreenLED_Off", resourceCulture);
@@ -263,9 +293,29 @@ namespace Mehrbod_IoT.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap objects_GreenLED_On {
+            get {
+                object obj = ResourceManager.GetObject("objects_GreenLED_On", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap objects_RedLED_Off {
             get {
                 object obj = ResourceManager.GetObject("objects_RedLED_Off", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap objects_RedLED_On {
+            get {
+                object obj = ResourceManager.GetObject("objects_RedLED_On", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -121,8 +121,8 @@
   <data name="img_SerialPort_BaudRate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_BaudRate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="objects_BlueLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="img_Internet1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_Internet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="img_SerialPort_DataBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_DataBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -133,8 +133,8 @@
   <data name="objects_BlueLED_Off1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="objects_GreenLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_GreenLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="img_SerialPort" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="img_SerialPort_Parity" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_Parity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -166,11 +166,14 @@
   <data name="ico_Telegram_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\ico_Telegram_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="img_SerialPort" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="objects_GreenLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_GreenLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="obj_PIR_Idle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\obj_PIR_Idle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_BlueLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="objects_RedLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\objects_RedLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -178,7 +181,19 @@
   <data name="img_SerialPort_Handshake" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_Handshake.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="img_Internet1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_Internet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="obj_PIR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\obj_PIR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="obj_PIR_Triggered" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\obj_PIR_Triggered.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_BlueLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_BlueLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_GreenLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_GreenLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_RedLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_RedLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -29,6 +29,23 @@ namespace Mehrbod_IoT
             "921600"
         };
 
+        [Flags]
+        public enum IoT_Device_Flags : ulong
+        {
+            DEVICE_Flag_None = 0,
+
+            DEVICE_Flag_Detect_Sensor_PIR = 1 << 0,
+            DEVICE_Flag_Init_WS2812 = 1 << 1,
+            DEVICE_Flag_Init_SSD1306 = 1 << 2,
+            DEVICE_Flag_Init_Ports = 1 << 3,
+            DEVICE_Flag_Init_LEDs = 1 << 4,
+            DEVICE_Flag_Init_Buzzer = 1 << 5,
+
+            DEVICE_Flag_OnState_LED_RED = 1 << 6,
+            DEVICE_Flag_OnState_LED_GREEN = 1 << 7,
+            DEVICE_Flag_OnState_LED_BLUE = 1 << 8,
+        }
+
         protected SerialPort serialPort_MehrbodIoT = new();
         protected TelegramBotClient? botClient = null;
 
@@ -36,6 +53,9 @@ namespace Mehrbod_IoT
         protected List<long> list_Authorized_ChatIDs = new List<long>();
 
         protected Task? task_TelegramPolling;
+        protected Task? task_SerialPolling;
+
+        protected IoT_Device_Flags device_Flags = 0;
 
         public IoT_ControlPanel()
         {
@@ -112,6 +132,12 @@ namespace Mehrbod_IoT
                         // Thread.Sleep(500);
 
                         serialPort_MehrbodIoT.Open();
+
+                        // Attach "DataReceived" event handler.
+                        serialPort_MehrbodIoT.DataReceived += SerialPort_MehrbodIoT_DataReceived;
+
+                        // Start SerialPort data processing.
+                        task_SerialPolling = Task.Run(() => Begin_SerialPortProcess());
                     }
                     catch (Exception ex)
                     {
@@ -152,6 +178,38 @@ namespace Mehrbod_IoT
             else
             {
 
+            }
+        }
+
+        /// <summary>
+        /// Temporary line data received from USART.
+        /// </summary>
+        string tempLine = "";
+
+        /// <summary>
+        /// Input commands received via USART.
+        /// </summary>
+        Queue<string> iot_InputCommands = new Queue<string>();
+        private void SerialPort_MehrbodIoT_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            int bytesToRead = serialPort_MehrbodIoT.BytesToRead;
+
+            for(int i = 1; i <= bytesToRead; i++)
+            {
+                int b = serialPort_MehrbodIoT.ReadChar();
+                char c = (char)b;
+
+                if(b == 10 || b == 13)
+                {
+                    if (!String.IsNullOrEmpty(tempLine) && !String.IsNullOrWhiteSpace(tempLine))
+                        iot_InputCommands.Enqueue(tempLine);
+                    // MessageBox.Show(tempLine);
+                    tempLine = "";
+                }
+                else
+                {
+                    tempLine += c;
+                }
             }
         }
 
@@ -199,7 +257,7 @@ namespace Mehrbod_IoT
                                     else
                                     {
                                         // Prompt main menu.
-
+                                        await IoT_Bot_Prompt_MainMenu_Async(chatID, update.Message);
                                     }
                                 }
                             }
@@ -514,6 +572,438 @@ namespace Mehrbod_IoT
                     MessageBox.Show("خطا در تازه‌سازی تنظیمات پیکربندی. جزئیات خطا به شرح ذیل می‌باشد:\n\n" + ex.Message, "خطا در انجام عملیات", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
                 }
             }
+        }
+
+        private async Task<bool> IoT_SerialPort_SendData_Async(string message, bool addHeader = true, bool appendCR = true, bool silent = false)
+        {
+            try
+            {
+                string sendData = "";
+                /*if(addHeader)
+                    serialPort_MehrbodIoT.Write("MEHRBOD_IOT " + message);
+                else
+                    serialPort_MehrbodIoT.Write(message);
+                if (appendCR)
+                    serialPort_MehrbodIoT.WriteLine("");*/
+
+                if (addHeader)
+                    sendData = "MEHRBOD_IOT " + message;
+                else
+                    sendData = message;
+
+                foreach(char c in sendData)
+                {
+                    serialPort_MehrbodIoT.Write(c.ToString());
+                    await Task.Delay(TimeSpan.FromMilliseconds(1));
+                }
+                if (appendCR)
+                    serialPort_MehrbodIoT.WriteLine("");
+
+                // Dummy delay.
+                await Task.Delay(1);
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                if(!silent)
+                    MessageBox.Show("خطا در ارسال اطلاعات به درگاه. جزئیات خطا به شرح ذیل می‌باشد:\n\n" + ex.Message, "خطای ارسال اطلاعات به درگاه", MessageBoxButtons.OK, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
+                IoT_Log("خطا در ارسال اطلاعات به درگاه:  " + ex.Message);
+
+                return false;
+            }
+        }
+
+        private async Task Begin_SerialPortProcess()
+        {
+            while (true)
+            {
+                // Dummy delay.
+                await Task.Delay(1);
+
+                // Check if there is data available for reading.
+                if(iot_InputCommands.TryDequeue(out string? lineData))
+                {
+                    if(lineData != null)
+                    {
+                        string[] args = lineData.Split(' ');
+
+                        if(args.Length > 0)
+                        {
+                            // Check reflected commands.
+                            if (args[0] == "MEHRBOD_IOT")
+                            {
+                                // Set device flags.
+                                if (args[1] == "SET_DEV_FLAG")
+                                {
+                                    // Check PIR sensor.
+                                    if (args[2] == "CHECK_PIR_SENSOR")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR;
+                                }
+                                // Clear device flags.
+                                else if (args[1] == "CLEAR_DEV_FLAG")
+                                {
+                                    // Check PIR sensor.
+                                    if (args[2] == "CHECK_PIR_SENSOR")
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR;
+                                }
+
+                                // Device 1: WS2812.
+                                else if (args[1] == "WS2812")
+                                {
+                                    // Set background color.
+                                    if (args[2] == "SET_BKG_COLOR")
+                                    {
+                                        int.TryParse(args[3], out int r);
+                                        int.TryParse(args[4], out int g);
+                                        int.TryParse(args[5], out int b);
+
+                                        Invoke(() =>
+                                        {
+                                            foreach(var led in groupBox_Thing_WS2812.Controls)
+                                            {
+                                                Button ledBtn = (Button)led;
+                                                ledBtn.BackColor = Color.FromArgb(r, g, b);
+                                            }
+                                        });
+                                    }
+
+                                    // Clear background color.
+                                    else if (args[2] == "CLEAR_BKG_COLOR")
+                                    {
+                                        Invoke(() =>
+                                        {
+                                            foreach (var led in groupBox_Thing_WS2812.Controls)
+                                            {
+                                                Button ledBtn = (Button)led;
+                                                ledBtn.BackColor = Color.FromArgb(0, 0, 0);
+                                            }
+                                        });
+                                    }
+
+                                    // Set pixel color at a specific position.
+                                    else if (args[2] == "SET_PIXEL")
+                                    {
+                                        int.TryParse(args[3], out int x);
+                                        int.TryParse(args[4], out int y);
+                                        int.TryParse(args[5], out int r);
+                                        int.TryParse(args[6], out int g);
+                                        int.TryParse(args[7], out int b);
+
+                                        Invoke(() =>
+                                        {
+                                            string component_Name = "button_Matrix_" + x.ToString() + y.ToString();
+
+                                            // MessageBox.Show(component_Name);
+                                            Button? buttonControl = (Button)(Controls.Find(component_Name, true)[0]);
+                                            if (buttonControl != null)
+                                            {
+                                                buttonControl.BackColor = Color.FromArgb(r, g, b);
+                                            }
+                                        });
+                                    }
+                                }
+
+                                // Device 2: LEDs.
+                                else if (args[1] == "LED")
+                                {
+                                    // Red LED On/Off.
+                                    if (args[2] == "RED")
+                                    {
+                                        if (args[3] == "TURN_ON")
+                                            device_Flags |= IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED;
+                                        else if (args[3] == "TURN_OFF")
+                                            device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED;
+                                    }
+                                    // Green LED On/Off.
+                                    else if (args[2] == "GREEN")
+                                    {
+                                        if (args[3] == "TURN_ON")
+                                            device_Flags |= IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN;
+                                        else if (args[3] == "TURN_OFF")
+                                            device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN;
+                                    }
+                                    // Blue LED On/Off.
+                                    else if (args[2] == "BLUE")
+                                    {
+                                        if (args[3] == "TURN_ON")
+                                            device_Flags |= IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE;
+                                        else if (args[3] == "TURN_OFF")
+                                            device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE;
+                                    }
+
+                                    // Update IoT UI.
+                                    Invoke(() => { UpdateUI_IoT(); });
+                                }
+
+                                // Device 3: PIR (Motion Detector)
+                                else if (args[1] == "PIR")
+                                {
+                                    // End alarm state.
+                                    if (args[2] == "END_ALARM")
+                                    {
+                                        if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR))
+                                            Invoke(() => { pictureBox_Objects_PIR.Image = Properties.Resources.obj_PIR_Idle; });
+                                        else
+                                            Invoke(() => { pictureBox_Objects_PIR.Image = Properties.Resources.obj_PIR; });
+                                    }
+                                }
+                            }
+
+                            // Check for a DEVICE message.
+                            else if (args[0] == "DEVICE")
+                            {
+                                // Check if its an alert.
+                                if (args[1] == "ALERT")
+                                {
+                                    // Check if it's the motion detection sensor (PIR).
+                                    if (args[2] == "PIR")
+                                    {
+                                        Invoke(() =>
+                                        {
+                                            pictureBox_Objects_PIR.Image = Properties.Resources.obj_PIR_Triggered;
+                                        });
+                                    }
+                                }
+                            }
+
+                            // Check if the device is "REPORTING" something.
+                            else if (args[0] == "REPORTING")
+                            {
+                                // MessageBox.Show("REPORTING!");
+                                // Check if it is reporting sensor detection enablity state.
+                                if (args[1] == "SENSOR_DETECTION_PIR")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR;
+                                }
+
+                                // Check if it is reporting WS2812 initialization state.
+                                else if (args[1] == "INIT_WS2812")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Init_WS2812;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Init_WS2812;
+                                }
+                                // Check if it is reporting SSD1306 initialization state.
+                                else if (args[1] == "INIT_SSD1306")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Init_SSD1306;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Init_SSD1306;
+                                }
+                                // Check if it is reporting Ports initialization state.
+                                else if (args[1] == "INIT_Ports")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Init_Ports;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Init_Ports;
+                                }
+                                // Check if it is reporting LEDs initialization state.
+                                else if (args[1] == "INIT_LEDs")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Init_LEDs;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Init_LEDs;
+                                }
+                                // Check if it is reporting Buzzer initialization state.
+                                else if (args[1] == "INIT_Buzzer")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_Init_Buzzer;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_Init_Buzzer;
+                                }
+
+                                // Check if RED LED is turned on.
+                                else if (args[1] == "ON_LED_RED")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED;
+                                }
+                                // Check if GREEN LED is turned on.
+                                else if (args[1] == "ON_LED_GREEN")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN;
+                                }
+                                // Check if BLUE LED is turned on.
+                                else if (args[1] == "ON_LED_BLUE")
+                                {
+                                    if (args[2] == "TRUE")
+                                        device_Flags |= IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE;
+                                    else
+                                        device_Flags &= ~IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE;
+                                }
+
+                                // Check if the device is reporting the color of a specific WS2812 pixel.
+                                else if (args[1] == "WS2812_PIXEL")
+                                {
+                                    int.TryParse(args[2], out int x);
+                                    int.TryParse(args[3], out int y);
+                                    int.TryParse(args[4], out int r);
+                                    int.TryParse(args[5], out int g);
+                                    int.TryParse(args[6], out int b);
+
+                                    // Apply color on matrix.
+                                    Invoke(() =>
+                                    {
+                                        string component_Name = "button_Matrix_" + x.ToString() + y.ToString();
+
+                                        // MessageBox.Show(component_Name);
+                                        Button? buttonControl = (Button)(Controls.Find(component_Name, true)[0]);
+                                        if (buttonControl != null)
+                                        {
+                                            r *= 6;
+                                            g *= 6;
+                                            b *= 6;
+
+                                            if (r > 255)
+                                                r = 255;
+                                            if (g > 255)
+                                                g = 255;
+                                            if (b > 255)
+                                                b = 255;
+                                            // MessageBox.Show("r: " + r.ToString() + '\n' + "g: " + g.ToString() + '\n' + "b: " + b.ToString());
+                                            buttonControl.BackColor = Color.FromArgb(r, g, b);
+                                        }
+                                    });
+                                }
+
+                                // In the end, update IoT UI.
+                                if(InvokeRequired)
+                                {
+                                    Invoke(() =>
+                                    {
+                                        UpdateUI_IoT();
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void تازهسازیToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _ = IoT_SerialPort_SendData_Async("REPORT_STATUS");
+        }
+
+        /// <summary>
+        /// Updates UI related to IoT and device flags, etc. Must be invoked externally if called from separate thread.
+        /// </summary>
+        private void UpdateUI_IoT()
+        {
+            if(device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR))
+                pictureBox_Objects_PIR.Image = Properties.Resources.obj_PIR_Idle;
+            else
+                pictureBox_Objects_PIR.Image = Properties.Resources.obj_PIR;
+
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED))
+                pictureBox_Objects_LED_Red.Image = Properties.Resources.objects_RedLED_On;
+            else
+                pictureBox_Objects_LED_Red.Image = Properties.Resources.objects_RedLED_Off;
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN))
+                pictureBox_Objects_LED_Green.Image = Properties.Resources.objects_GreenLED_On;
+            else
+                pictureBox_Objects_LED_Green.Image = Properties.Resources.objects_GreenLED_Off;
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE))
+                pictureBox_Objects_LED_Blue.Image = Properties.Resources.objects_BlueLED_On;
+            else
+                pictureBox_Objects_LED_Blue.Image = Properties.Resources.objects_BlueLED_Off;
+        }
+
+        private void pictureBox_Objects_LED_Red_Click(object sender, EventArgs e)
+        {
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED))
+                _ = IoT_SerialPort_SendData_Async("LED RED TURN_OFF", true, true, true);
+            else
+                _ = IoT_SerialPort_SendData_Async("LED RED TURN_ON", true, true, true);
+        }
+
+        private void pictureBox_Objects_LED_Green_Click(object sender, EventArgs e)
+        {
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN))
+                _ = IoT_SerialPort_SendData_Async("LED GREEN TURN_OFF", true, true, true);
+            else
+                _ = IoT_SerialPort_SendData_Async("LED GREEN TURN_ON", true, true, true);
+        }
+
+        private void pictureBox_Objects_LED_Blue_Click(object sender, EventArgs e)
+        {
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE))
+                _ = IoT_SerialPort_SendData_Async("LED BLUE TURN_OFF", true, true, true);
+            else
+                _ = IoT_SerialPort_SendData_Async("LED BLUE TURN_ON", true, true, true);
+        }
+
+        private void pictureBox_Objects_PIR_Click(object sender, EventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR))
+                    await IoT_SerialPort_SendData_Async("CLEAR_DEV_FLAG CHECK_PIR_SENSOR");
+                else
+                    await IoT_SerialPort_SendData_Async("SET_DEV_FLAG CHECK_PIR_SENSOR");
+
+                // await Task.Delay(500);
+                await IoT_SerialPort_SendData_Async("PIR END_ALARM");
+            });
+
+            /*if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR))
+                _ = IoT_SerialPort_SendData_Async("CLEAR_DEV_FLAG CHECK_PIR_SENSOR");
+            else
+                _ = IoT_SerialPort_SendData_Async("SET_DEV_FLAG CHECK_PIR_SENSOR");
+
+            _ = IoT_SerialPort_SendData_Async("PIR END_ALARM");*/
+        }
+
+        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_MainMenu_Async(long chatID, Telegram.Bot.Types.Message message)
+        {
+            string prompt_MainMenu = "🏡 به منزل خود خوش آمدید.\n\n";
+
+            prompt_MainMenu += "💡 وضعیت چراغ‌ها و لامپ‌ها:\n";
+            prompt_MainMenu += "🔴 چراغ قرمز:\t";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED))
+                prompt_MainMenu += "✅ <b>روشن</b>";
+            else
+                prompt_MainMenu += "❎ <b>خاموش</b>";
+            prompt_MainMenu += '\n';
+            prompt_MainMenu += "🟢 چراغ سبز:\t";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN))
+                prompt_MainMenu += "✅ <b>روشن</b>";
+            else
+                prompt_MainMenu += "❎ <b>خاموش</b>";
+            prompt_MainMenu += '\n';
+            prompt_MainMenu += "🔵 چراغ آبی:\t";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE))
+                prompt_MainMenu += "✅ <b>روشن</b>";
+            else
+                prompt_MainMenu += "❎ <b>خاموش</b>";
+            prompt_MainMenu += '\n';
+
+            prompt_MainMenu += '\n';
+            prompt_MainMenu += "🕺 وضعیت سنسور تشخیص حرکت:\n";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR))
+                prompt_MainMenu += "✅ <b>آماده به کار</b>";
+            else
+                prompt_MainMenu += "❌ <b>غیر فعال</b>";
+
+            if (botClient != null)
+                return await botClient.SendTextMessageAsync(chatID, prompt_MainMenu, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true);
+            else
+                return null;
         }
     }
 }

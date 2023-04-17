@@ -52,7 +52,7 @@
             this.pictureBox_InternetSettings_BotToken = new System.Windows.Forms.PictureBox();
             this.label_InternetSettings_BotToken = new System.Windows.Forms.Label();
             this.groupBox_Things = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox_Objects_PIR = new System.Windows.Forms.PictureBox();
             this.groupBox_Thing_WS2812 = new System.Windows.Forms.GroupBox();
             this.button_Matrix_77 = new System.Windows.Forms.Button();
             this.button_Matrix_67 = new System.Windows.Forms.Button();
@@ -127,6 +127,8 @@
             this.بازآوریپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.حذفپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.دستگاهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.تازهسازیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.اینترنتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.شمارهتلفنهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Reports = new System.Windows.Forms.GroupBox();
@@ -143,7 +145,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Settings_Internet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_InternetSettings_BotToken)).BeginInit();
             this.groupBox_Things.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Objects_PIR)).BeginInit();
             this.groupBox_Thing_WS2812.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Objects_LED_Blue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Objects_LED_Green)).BeginInit();
@@ -456,7 +458,7 @@
             // 
             // groupBox_Things
             // 
-            this.groupBox_Things.Controls.Add(this.pictureBox1);
+            this.groupBox_Things.Controls.Add(this.pictureBox_Objects_PIR);
             this.groupBox_Things.Controls.Add(this.groupBox_Thing_WS2812);
             this.groupBox_Things.Controls.Add(this.pictureBox_Objects_LED_Blue);
             this.groupBox_Things.Controls.Add(this.pictureBox_Objects_LED_Green);
@@ -470,18 +472,19 @@
             this.groupBox_Things.TabStop = false;
             this.groupBox_Things.Text = "اشیاء";
             // 
-            // pictureBox1
+            // pictureBox_Objects_PIR
             // 
-            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = global::Mehrbod_IoT.Properties.Resources.obj_PIR_Idle;
-            this.pictureBox1.Location = new System.Drawing.Point(318, 41);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
+            this.pictureBox_Objects_PIR.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox_Objects_PIR.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox_Objects_PIR.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox_Objects_PIR.Image = global::Mehrbod_IoT.Properties.Resources.obj_PIR;
+            this.pictureBox_Objects_PIR.Location = new System.Drawing.Point(318, 41);
+            this.pictureBox_Objects_PIR.Name = "pictureBox_Objects_PIR";
+            this.pictureBox_Objects_PIR.Size = new System.Drawing.Size(64, 64);
+            this.pictureBox_Objects_PIR.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox_Objects_PIR.TabIndex = 4;
+            this.pictureBox_Objects_PIR.TabStop = false;
+            this.pictureBox_Objects_PIR.Click += new System.EventHandler(this.pictureBox_Objects_PIR_Click);
             // 
             // groupBox_Thing_WS2812
             // 
@@ -1335,6 +1338,7 @@
             this.pictureBox_Objects_LED_Blue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_Objects_LED_Blue.TabIndex = 5;
             this.pictureBox_Objects_LED_Blue.TabStop = false;
+            this.pictureBox_Objects_LED_Blue.Click += new System.EventHandler(this.pictureBox_Objects_LED_Blue_Click);
             // 
             // pictureBox_Objects_LED_Green
             // 
@@ -1348,6 +1352,7 @@
             this.pictureBox_Objects_LED_Green.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_Objects_LED_Green.TabIndex = 4;
             this.pictureBox_Objects_LED_Green.TabStop = false;
+            this.pictureBox_Objects_LED_Green.Click += new System.EventHandler(this.pictureBox_Objects_LED_Green_Click);
             // 
             // pictureBox_Objects_LED_Red
             // 
@@ -1361,6 +1366,7 @@
             this.pictureBox_Objects_LED_Red.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox_Objects_LED_Red.TabIndex = 2;
             this.pictureBox_Objects_LED_Red.TabStop = false;
+            this.pictureBox_Objects_LED_Red.Click += new System.EventHandler(this.pictureBox_Objects_LED_Red_Click);
             // 
             // menuStrip_MehrodIoT_MainMenu
             // 
@@ -1410,9 +1416,25 @@
             // 
             // دستگاهToolStripMenuItem
             // 
+            this.دستگاهToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.تازهسازیToolStripMenuItem,
+            this.toolStripSeparator1});
             this.دستگاهToolStripMenuItem.Name = "دستگاهToolStripMenuItem";
             this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(83, 34);
             this.دستگاهToolStripMenuItem.Text = "دستگاه‌ها";
+            // 
+            // تازهسازیToolStripMenuItem
+            // 
+            this.تازهسازیToolStripMenuItem.Name = "تازهسازیToolStripMenuItem";
+            this.تازهسازیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.تازهسازیToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.تازهسازیToolStripMenuItem.Text = "تازه‌سازی و هماهنگی";
+            this.تازهسازیToolStripMenuItem.Click += new System.EventHandler(this.تازهسازیToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(270, 6);
             // 
             // اینترنتToolStripMenuItem
             // 
@@ -1491,7 +1513,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Settings_Internet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_InternetSettings_BotToken)).EndInit();
             this.groupBox_Things.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Objects_PIR)).EndInit();
             this.groupBox_Thing_WS2812.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Objects_LED_Blue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Objects_LED_Green)).EndInit();
@@ -1602,7 +1624,7 @@
         private Button button_Matrix_14;
         private Button button_Matrix_04;
         private ToolStripMenuItem دستگاهToolStripMenuItem;
-        private PictureBox pictureBox1;
+        private PictureBox pictureBox_Objects_PIR;
         private GroupBox groupBox_Reports;
         private TextBox textBox_Log;
         private ToolStripMenuItem اینترنتToolStripMenuItem;
@@ -1610,5 +1632,7 @@
         private ToolStripMenuItem ذخیرهپیکربندیToolStripMenuItem;
         private ToolStripMenuItem بازآوریپیکربندیToolStripMenuItem;
         private ToolStripMenuItem حذفپیکربندیToolStripMenuItem;
+        private ToolStripMenuItem تازهسازیToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }
