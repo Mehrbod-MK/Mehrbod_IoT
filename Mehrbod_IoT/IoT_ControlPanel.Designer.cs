@@ -133,6 +133,7 @@
             this.شمارهتلفنهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Reports = new System.Windows.Forms.GroupBox();
             this.textBox_Log = new System.Windows.Forms.TextBox();
+            this.دوربینهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Settings_SerialPort.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_Handshake)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_StopBits)).BeginInit();
@@ -1418,7 +1419,8 @@
             // 
             this.دستگاهToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.تازهسازیToolStripMenuItem,
-            this.toolStripSeparator1});
+            this.toolStripSeparator1,
+            this.دوربینهاToolStripMenuItem});
             this.دستگاهToolStripMenuItem.Name = "دستگاهToolStripMenuItem";
             this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(83, 34);
             this.دستگاهToolStripMenuItem.Text = "دستگاه‌ها";
@@ -1478,6 +1480,12 @@
             this.textBox_Log.Size = new System.Drawing.Size(343, 290);
             this.textBox_Log.TabIndex = 17;
             this.textBox_Log.WordWrap = false;
+            // 
+            // دوربینهاToolStripMenuItem
+            // 
+            this.دوربینهاToolStripMenuItem.Name = "دوربینهاToolStripMenuItem";
+            this.دوربینهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.دوربینهاToolStripMenuItem.Text = "دوربین‌ها";
             // 
             // IoT_ControlPanel
             // 
@@ -1634,5 +1642,6 @@
         private ToolStripMenuItem حذفپیکربندیToolStripMenuItem;
         private ToolStripMenuItem تازهسازیToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem دوربینهاToolStripMenuItem;
     }
 }

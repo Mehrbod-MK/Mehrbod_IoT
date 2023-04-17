@@ -4,6 +4,9 @@ using System.IO.Ports;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
+using AForge.Video;
+using AForge.Video.DirectShow;
+
 namespace Mehrbod_IoT
 {
     public partial class IoT_ControlPanel : Form
@@ -57,11 +60,66 @@ namespace Mehrbod_IoT
 
         protected IoT_Device_Flags device_Flags = 0;
 
+        // Camera capture.
+        FilterInfoCollection? filterInfoCollection_Cameras;
+        VideoCaptureDevice? videoCaptureDevice;
+
+        int deviceIndex_Camera = -1;
+
         public IoT_ControlPanel()
         {
             InitializeComponent();
 
-            
+            // Initialize external devices.
+            Initialize_ExternalDevices();
+        }
+
+        protected void Initialize_ExternalDevices()
+        {
+            // Initialize camera devices.
+            Initialize_ExternalDevices_Cameras();
+        }
+
+        protected void Initialize_ExternalDevices_Cameras()
+        {     
+            filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            int i = 0;
+            foreach (FilterInfo device in filterInfoCollection_Cameras)
+            {
+                ToolStripMenuItem menuItem_Cameras = new ToolStripMenuItem()
+                {
+                    Text = device.Name,
+                    AutoToolTip = true,
+                    Tag = i++,
+                };
+                menuItem_Cameras.Click += (sender, e) =>
+                {
+                    ToolStripMenuItem? menu_Camera = sender as ToolStripMenuItem;
+                    if (menu_Camera != null)
+                    {
+                        int tag = (int)menu_Camera.Tag;
+
+                        deviceIndex_Camera = tag;
+                    }
+
+                    for (int a = 0; a < دوربینهاToolStripMenuItem.DropDownItems.Count; a++)
+                        if (a == deviceIndex_Camera)
+                            ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[a]).Checked = true;
+                        else
+                            ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[a]).Checked = false;
+                };
+                دوربینهاToolStripMenuItem.DropDownItems.Add(menuItem_Cameras);
+            }
+            if (i > 0)
+            {
+                دوربینهاToolStripMenuItem.Enabled = true;
+                deviceIndex_Camera = 0;
+                ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[0]).Checked = true;
+            }
+            else
+            {
+                دوربینهاToolStripMenuItem.Enabled = false;
+            }
         }
 
         private void IoT_ControlPanel_Load(object sender, EventArgs e)
