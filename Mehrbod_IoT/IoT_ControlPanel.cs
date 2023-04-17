@@ -81,7 +81,9 @@ namespace Mehrbod_IoT
         }
 
         protected void Initialize_ExternalDevices_Cameras()
-        {     
+        {
+            دوربینهاToolStripMenuItem.DropDownItems.Clear();
+
             filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             int i = 0;
             foreach (FilterInfo device in filterInfoCollection_Cameras)
@@ -1057,9 +1059,43 @@ namespace Mehrbod_IoT
                 prompt_MainMenu += "✅ <b>آماده به کار</b>";
             else
                 prompt_MainMenu += "❌ <b>غیر فعال</b>";
+            prompt_MainMenu += '\n';
+
+            prompt_MainMenu += '\n';
+            prompt_MainMenu += "📸 دستگاه ضبط تصویر فعال:\n";
+            if (deviceIndex_Camera < 0)
+                prompt_MainMenu += "❌ <b>دوربین موجود نمی‌باشد</b>";
+            else if (filterInfoCollection_Cameras != null)
+                prompt_MainMenu += "👁 <b>" + filterInfoCollection_Cameras[deviceIndex_Camera].Name + "</b>";
+            prompt_MainMenu += '\n';
+
+            // Main Menu inline keyboard.
+            List<List<InlineKeyboardButton>> inlineKeyboard_MainMenu = new List<List<InlineKeyboardButton>>()
+            {
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🌈 ماژول تولید رنگ WS2812", "MENU_DISPLAY_PANEL_WS2812"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🖥 نمایشگر OLED SSD1306", "MENU_DISPLAY_PANEL_SSD1306"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🕺 حسگر تشخیص حرکت PIR", "MENU_DISPLAY_PANEL_PIR"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("💡 چراغ‌ها", "MENU_DISPLAY_PANEL_LEDS"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("📷 دوربین‌ها", "MENU_DISPLAY_PANEL_LEDS"),
+                },
+            };
 
             if (botClient != null)
-                return await botClient.SendTextMessageAsync(chatID, prompt_MainMenu, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true);
+                return await botClient.SendTextMessageAsync(chatID, prompt_MainMenu, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_MainMenu));
             else
                 return null;
         }
