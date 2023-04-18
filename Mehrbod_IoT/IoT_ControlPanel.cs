@@ -6,12 +6,15 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 using AForge.Video;
 using AForge.Video.DirectShow;
+using Telegram.Bot.Types;
 
 namespace Mehrbod_IoT
 {
     public partial class IoT_ControlPanel : Form
     {
         public const uint _PROFILE_HEADER_VERSION = 1;
+
+        public const int _NUM_LEDS_ROWS = 8, _NUM_LEDS_COLS = 8;
 
         public static readonly ReplyKeyboardRemove _COMMAND_REMOVE_KEYBOARD = new ReplyKeyboardRemove();
 
@@ -60,6 +63,9 @@ namespace Mehrbod_IoT
 
         protected IoT_Device_Flags device_Flags = 0;
 
+        // WS2812 - Current Color.
+        protected Color color_WS2812_Pixel = Color.White;
+
         // Camera capture.
         FilterInfoCollection? filterInfoCollection_Cameras;
         VideoCaptureDevice? videoCaptureDevice;
@@ -72,6 +78,49 @@ namespace Mehrbod_IoT
 
             // Initialize external devices.
             Initialize_ExternalDevices();
+
+            // Initialize Event Handlers.
+            Initailize_EventHandlers();
+        }
+
+        protected void Initailize_EventHandlers()
+        {
+            // Initialize WS2812 matrix button Click event handlers.
+            for(int x = 0; x < _NUM_LEDS_COLS; x++)
+                for(int y = 0; y < _NUM_LEDS_ROWS; y++)
+                    ((Button)Controls.Find("button_Matrix_" + x.ToString() + y.ToString(), true)[0]).MouseDown += IoT_ButtonMatirx_ControlPanel_MouseDown;
+        }
+
+        private void IoT_ButtonMatirx_ControlPanel_MouseDown(object? sender, MouseEventArgs e)
+        {
+            int x = 0, y = 0;
+
+            if (sender != null)
+            {
+                string[] butSplit = ((Button)sender).Name.Split('_');
+
+                if (butSplit.Length > 2)
+                {
+                    if (int.TryParse(butSplit[2], out int xy))
+                    {
+                        y = xy % 10;
+                        xy /= 10;
+                        x = xy % 10;
+                    }
+                }
+            }
+
+            // Set color if "Mouse Left" button was pressed.
+            if (e.Button == MouseButtons.Left)
+            {
+                _ = IoT_SerialPort_SendData_Async("WS2812 SET_PIXEL " + x.ToString() + " " + y.ToString() + " " + color_WS2812_Pixel.R + " " + color_WS2812_Pixel.G + " " + color_WS2812_Pixel.B);
+            }
+
+            // Clear color from pixel if "Right button" was pressed.
+            else if(e.Button == MouseButtons.Right)
+            {
+                _ = IoT_SerialPort_SendData_Async("WS2812 SET_PIXEL " + x.ToString() + " " + y.ToString() + " 0 0 0");
+            }
         }
 
         protected void Initialize_ExternalDevices()
@@ -294,6 +343,12 @@ namespace Mehrbod_IoT
                         offset = update.Id + 1;
 
                         // Check update data.
+                        // Check if input data is an inline callback query.
+                        if(update.CallbackQuery != null)
+                        {
+                            await Task.Run(() => Begin_Bot_InlineCallbackProcess(update.CallbackQuery));
+                        }
+
                         // Check if input object is a message.
                         if(update.Message != null)
                         {
@@ -530,6 +585,31 @@ namespace Mehrbod_IoT
             }
         }
 
+        private void IoT_Generate_Menus_AuthorizedChatIDs()
+        {
+            چتهایمجازToolStripMenuItem.DropDownItems.Clear();
+
+            foreach(var chatId in list_Authorized_ChatIDs)
+            {
+                ToolStripMenuItem menuItem = new ToolStripMenuItem()
+                {
+                    AutoToolTip = true,
+                    Text = chatId.ToString(),
+                };
+
+                menuItem.Click += (sender, e) =>
+                {
+                    if (MessageBox.Show("آیا از حذف شماره چت " + chatId.ToString() + " مطمئن هستید؟", "هشدار!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign) == DialogResult.Yes)
+                    {
+                        list_Authorized_ChatIDs.Remove(chatId);
+                        IoT_Save_Profile(true);
+                    }
+                };
+
+                چتهایمجازToolStripMenuItem.DropDownItems.Add(menuItem);
+            }
+        }
+
         private void IoT_Generate_Menus_AuthorizedPhoneNumbers()
         {
             شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Clear();
@@ -540,6 +620,15 @@ namespace Mehrbod_IoT
                 {
                     AutoToolTip = true,
                     Text = phoneNum,
+                };
+
+                menuItem.Click += (sender, e) =>
+                {
+                    if (MessageBox.Show("آیا از حذف شماره تلفن " + phoneNum + " مطمئن هستید؟", "هشدار!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign) == DialogResult.Yes)
+                    {
+                        list_Authorized_PhoneNumbers.Remove(phoneNum);
+                        IoT_Save_Profile(true);
+                    }
                 };
 
                 شمارهتلفنهایمجازToolStripMenuItem.DropDownItems.Add(menuItem);
@@ -613,6 +702,7 @@ namespace Mehrbod_IoT
         private void اینترنتToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             IoT_Generate_Menus_AuthorizedPhoneNumbers();
+            IoT_Generate_Menus_AuthorizedChatIDs();
         }
 
         private void حذفپیکربندیToolStripMenuItem_Click(object sender, EventArgs e)
@@ -624,7 +714,7 @@ namespace Mehrbod_IoT
 
                 try
                 {
-                    File.Delete(Environment.CurrentDirectory + @"\mehrbod_iot.conf");
+                    System.IO.File.Delete(Environment.CurrentDirectory + @"\mehrbod_iot.conf");
                     MessageBox.Show("فایل پیکربندی با موفقیت حذف شد و تنظیمات از نو شدند.", "عملیات موفق", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.RightAlign | MessageBoxOptions.RtlReading);
                 }
                 catch(Exception ex) 
@@ -729,7 +819,7 @@ namespace Mehrbod_IoT
                                     }
 
                                     // Clear background color.
-                                    else if (args[2] == "CLEAR_BKG_COLOR")
+                                    else if (args[2] == "CLEAR_BKG")
                                     {
                                         Invoke(() =>
                                         {
@@ -758,6 +848,7 @@ namespace Mehrbod_IoT
                                             Button? buttonControl = (Button)(Controls.Find(component_Name, true)[0]);
                                             if (buttonControl != null)
                                             {
+                                                // MessageBox.Show("");
                                                 buttonControl.BackColor = Color.FromArgb(r, g, b);
                                             }
                                         });
@@ -982,6 +1073,22 @@ namespace Mehrbod_IoT
                 pictureBox_Objects_LED_Blue.Image = Properties.Resources.objects_BlueLED_On;
             else
                 pictureBox_Objects_LED_Blue.Image = Properties.Resources.objects_BlueLED_Off;
+
+            Update_MenuItems();
+        }
+
+        /// <summary>
+        /// Updates menu items.
+        /// </summary>
+        private void Update_MenuItems()
+        {
+            toolStripMenuItem_EntekhabRang.BackColor = color_WS2812_Pixel;
+
+            قرمزToolStripMenuItem.Checked = device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED);
+            سبزToolStripMenuItem.Checked = device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN);
+            آبیToolStripMenuItem.Checked = device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE);
+
+            فعالToolStripMenuItem.Checked = device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR);
         }
 
         private void pictureBox_Objects_LED_Red_Click(object sender, EventArgs e)
@@ -1029,7 +1136,65 @@ namespace Mehrbod_IoT
             _ = IoT_SerialPort_SendData_Async("PIR END_ALARM");*/
         }
 
-        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_MainMenu_Async(long chatID, Telegram.Bot.Types.Message message)
+        private void toolStripMenuItem_EntekhabRang_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog()
+            {
+                AllowFullOpen = true,
+                AnyColor = true,
+                Color = color_WS2812_Pixel,
+                ShowHelp = false,
+                FullOpen = true,
+            };
+
+            if(colorDialog.ShowDialog() == DialogResult.OK)
+                color_WS2812_Pixel = colorDialog.Color;
+
+            Update_MenuItems();
+        }
+
+        private void پرکردنصفحهToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog()
+            {
+                AllowFullOpen = true,
+                AnyColor = true,
+                Color = color_WS2812_Pixel,
+                ShowHelp = false,
+                FullOpen = true,
+            };
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+                _ = IoT_SerialPort_SendData_Async("WS2812 SET_BKG_COLOR " + colorDialog.Color.R + " " + colorDialog.Color.G + " " + colorDialog.Color.B);
+        }
+
+        private void پاککردنصفحهToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _ = IoT_SerialPort_SendData_Async("WS2812 CLEAR_BKG");
+        }
+
+        private void قرمزToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pictureBox_Objects_LED_Red_Click(sender, e);
+        }
+
+        private void سبزToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pictureBox_Objects_LED_Green_Click(sender, e);
+        }
+
+        private void آبیToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pictureBox_Objects_LED_Blue_Click(sender, e);
+        }
+
+        private void فعالToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pictureBox_Objects_PIR_Click(sender, e);
+            Update_MenuItems();
+        }
+
+        private async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_MainMenu_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
         {
             string prompt_MainMenu = "🏡 به منزل خود خوش آمدید.\n\n";
 
@@ -1095,7 +1260,93 @@ namespace Mehrbod_IoT
             };
 
             if (botClient != null)
-                return await botClient.SendTextMessageAsync(chatID, prompt_MainMenu, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_MainMenu));
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_MainMenu, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_MainMenu));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_MainMenu, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_MainMenu));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task Begin_Bot_InlineCallbackProcess(CallbackQuery callbackQuery)
+        {
+            string? cbData = callbackQuery.Data;
+
+            if (botClient == null || cbData == null || callbackQuery.Message == null)
+                return;
+
+            // Split arguments.
+            string[] args = cbData.ToUpper().Split('~');
+
+            // Main Menu -> Display WS2812 device Control Panel.
+            if (args[0] == "MENU_DISPLAY_PANEL_WS2812")
+            {
+                await IoT_Bot_Prompt_WS2812_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+
+            // WS2812 -> Set Background with currentt color.
+            if (args[0] == "WS2812_SET_BKG")
+            {
+                _ = IoT_SerialPort_SendData_Async("WS2812 SET_BKG_COLOR " + color_WS2812_Pixel.R + " " + color_WS2812_Pixel.G + " " + color_WS2812_Pixel.R);
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دستور رنگ‌آمیزی صفحه با موفقیت اجرا شد.");
+            }
+            else if (args[0] == "WS2812_CLEAR_BKG")
+            {
+                _ = IoT_SerialPort_SendData_Async("WS2812 CLEAR_BKG");
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دستور پاکسازی صفحه با موفقیت اجرا شد.");
+            }
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_WS2812_CP_Async(long chatID, Telegram.Bot.Types.Message? message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_WS2812_CP = "🖥 پنل کنترلی ماژول تولید رنگ WS2812\n\n";
+
+            prompt_WS2812_CP += "👈 وضعیت دستگاه:\n";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Init_WS2812))
+                prompt_WS2812_CP += "✅ <b>آماده به کار</b>";
+            else
+                prompt_WS2812_CP += "❓ <b>نامشخص</b>";
+
+            prompt_WS2812_CP += "\n\n";
+
+            prompt_WS2812_CP += "🌈 رنگ فعلی:\n";
+            prompt_WS2812_CP += "🔴 " + color_WS2812_Pixel.R.ToString() + '\n';
+            prompt_WS2812_CP += "🟢 " + color_WS2812_Pixel.G.ToString() + '\n';
+            prompt_WS2812_CP += "🔵 " + color_WS2812_Pixel.B.ToString() + '\n';
+
+            prompt_WS2812_CP += '\n';
+            prompt_WS2812_CP += "👇 جهت کار با دستگاه، از دکمه‌های ذیل استفاده کنید:";
+
+            // Inline buttons for WS2812 Control Panel.
+            List<List<InlineKeyboardButton>> inlineKeyboard_WS2812 = new List<List<InlineKeyboardButton>>()
+            {
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🔴","WS2812_SET_COLOR_CHANNEL~R"),
+                    InlineKeyboardButton.WithCallbackData("🟢","WS2812_SET_COLOR_CHANNEL~G"),
+                    InlineKeyboardButton.WithCallbackData("🔵","WS2812_SET_COLOR_CHANNEL~B"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("✳ پر کردن صفحه", "WS2812_SET_BKG"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🧹 پاکسازی صفحه", "WS2812_CLEAR_BKG"),
+                },
+            };
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_WS2812_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_WS2812));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_WS2812_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_WS2812));
+                else return null;
+            }
             else
                 return null;
         }

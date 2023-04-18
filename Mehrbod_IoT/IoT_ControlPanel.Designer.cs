@@ -129,11 +129,24 @@
             this.دستگاهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.تازهسازیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.دوربینهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.انتخابرنگپیکسلToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem_EntekhabRang = new System.Windows.Forms.ToolStripMenuItem();
+            this.پرکردنصفحهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.پاککردنصفحهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.چراغهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.قرمزToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.سبزToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.آبیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.فعالToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.اینترنتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.شمارهتلفنهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Reports = new System.Windows.Forms.GroupBox();
             this.textBox_Log = new System.Windows.Forms.TextBox();
-            this.دوربینهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.چتهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Settings_SerialPort.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_Handshake)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_StopBits)).BeginInit();
@@ -1420,7 +1433,11 @@
             this.دستگاهToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.تازهسازیToolStripMenuItem,
             this.toolStripSeparator1,
-            this.دوربینهاToolStripMenuItem});
+            this.دوربینهاToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem,
+            this.چراغهاToolStripMenuItem,
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem});
             this.دستگاهToolStripMenuItem.Name = "دستگاهToolStripMenuItem";
             this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(83, 34);
             this.دستگاهToolStripMenuItem.Text = "دستگاه‌ها";
@@ -1438,10 +1455,116 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(270, 6);
             // 
+            // دوربینهاToolStripMenuItem
+            // 
+            this.دوربینهاToolStripMenuItem.Name = "دوربینهاToolStripMenuItem";
+            this.دوربینهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.دوربینهاToolStripMenuItem.Text = "دوربین‌ها";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(270, 6);
+            // 
+            // ماژولتولیدرنگWS2812ToolStripMenuItem
+            // 
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.انتخابرنگپیکسلToolStripMenuItem,
+            this.پرکردنصفحهToolStripMenuItem,
+            this.پاککردنصفحهToolStripMenuItem});
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.Name = "ماژولتولیدرنگWS2812ToolStripMenuItem";
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.Text = "ماژول تولید رنگ WS2812";
+            // 
+            // انتخابرنگپیکسلToolStripMenuItem
+            // 
+            this.انتخابرنگپیکسلToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_EntekhabRang});
+            this.انتخابرنگپیکسلToolStripMenuItem.Name = "انتخابرنگپیکسلToolStripMenuItem";
+            this.انتخابرنگپیکسلToolStripMenuItem.Size = new System.Drawing.Size(274, 26);
+            this.انتخابرنگپیکسلToolStripMenuItem.Text = "انتخاب رنگ پیکسل";
+            // 
+            // toolStripMenuItem_EntekhabRang
+            // 
+            this.toolStripMenuItem_EntekhabRang.Name = "toolStripMenuItem_EntekhabRang";
+            this.toolStripMenuItem_EntekhabRang.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.C)));
+            this.toolStripMenuItem_EntekhabRang.Size = new System.Drawing.Size(346, 26);
+            this.toolStripMenuItem_EntekhabRang.Text = "(برای انتخاب رنگ کلیک کنید)";
+            this.toolStripMenuItem_EntekhabRang.Click += new System.EventHandler(this.toolStripMenuItem_EntekhabRang_Click);
+            // 
+            // پرکردنصفحهToolStripMenuItem
+            // 
+            this.پرکردنصفحهToolStripMenuItem.Name = "پرکردنصفحهToolStripMenuItem";
+            this.پرکردنصفحهToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.F)));
+            this.پرکردنصفحهToolStripMenuItem.Size = new System.Drawing.Size(274, 26);
+            this.پرکردنصفحهToolStripMenuItem.Text = "پر کردن صفحه";
+            this.پرکردنصفحهToolStripMenuItem.Click += new System.EventHandler(this.پرکردنصفحهToolStripMenuItem_Click);
+            // 
+            // پاککردنصفحهToolStripMenuItem
+            // 
+            this.پاککردنصفحهToolStripMenuItem.Name = "پاککردنصفحهToolStripMenuItem";
+            this.پاککردنصفحهToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.C)));
+            this.پاککردنصفحهToolStripMenuItem.Size = new System.Drawing.Size(274, 26);
+            this.پاککردنصفحهToolStripMenuItem.Text = "پاک کردن صفحه";
+            this.پاککردنصفحهToolStripMenuItem.Click += new System.EventHandler(this.پاککردنصفحهToolStripMenuItem_Click);
+            // 
+            // چراغهاToolStripMenuItem
+            // 
+            this.چراغهاToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.قرمزToolStripMenuItem,
+            this.سبزToolStripMenuItem,
+            this.آبیToolStripMenuItem});
+            this.چراغهاToolStripMenuItem.Name = "چراغهاToolStripMenuItem";
+            this.چراغهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.چراغهاToolStripMenuItem.Text = "چراغ‌ها";
+            // 
+            // قرمزToolStripMenuItem
+            // 
+            this.قرمزToolStripMenuItem.ForeColor = System.Drawing.Color.Red;
+            this.قرمزToolStripMenuItem.Name = "قرمزToolStripMenuItem";
+            this.قرمزToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.قرمزToolStripMenuItem.Text = "قرمز";
+            this.قرمزToolStripMenuItem.Click += new System.EventHandler(this.قرمزToolStripMenuItem_Click);
+            // 
+            // سبزToolStripMenuItem
+            // 
+            this.سبزToolStripMenuItem.ForeColor = System.Drawing.Color.Green;
+            this.سبزToolStripMenuItem.Name = "سبزToolStripMenuItem";
+            this.سبزToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.سبزToolStripMenuItem.Text = "سبز";
+            this.سبزToolStripMenuItem.Click += new System.EventHandler(this.سبزToolStripMenuItem_Click);
+            // 
+            // آبیToolStripMenuItem
+            // 
+            this.آبیToolStripMenuItem.ForeColor = System.Drawing.Color.Blue;
+            this.آبیToolStripMenuItem.Name = "آبیToolStripMenuItem";
+            this.آبیToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.آبیToolStripMenuItem.Text = "آبی";
+            this.آبیToolStripMenuItem.Click += new System.EventHandler(this.آبیToolStripMenuItem_Click);
+            // 
+            // حسگرتشخیصحرکتPIRToolStripMenuItem
+            // 
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.فعالToolStripMenuItem});
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.Name = "حسگرتشخیصحرکتPIRToolStripMenuItem";
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.Text = "حسگر تشخیص حرکت (PIR)";
+            // 
+            // فعالToolStripMenuItem
+            // 
+            this.فعالToolStripMenuItem.Name = "فعالToolStripMenuItem";
+            this.فعالToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.فعالToolStripMenuItem.Text = "فعال؟";
+            this.فعالToolStripMenuItem.Click += new System.EventHandler(this.فعالToolStripMenuItem_Click);
+            // 
             // اینترنتToolStripMenuItem
             // 
             this.اینترنتToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.شمارهتلفنهایمجازToolStripMenuItem});
+            this.شمارهتلفنهایمجازToolStripMenuItem,
+            this.چتهایمجازToolStripMenuItem});
             this.اینترنتToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.icon_WWW_30x30;
             this.اینترنتToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.اینترنتToolStripMenuItem.Name = "اینترنتToolStripMenuItem";
@@ -1452,7 +1575,7 @@
             // شمارهتلفنهایمجازToolStripMenuItem
             // 
             this.شمارهتلفنهایمجازToolStripMenuItem.Name = "شمارهتلفنهایمجازToolStripMenuItem";
-            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(220, 26);
+            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.شمارهتلفنهایمجازToolStripMenuItem.Text = "شماره تلفن‌های مجاز";
             // 
             // groupBox_Reports
@@ -1465,7 +1588,7 @@
             this.groupBox_Reports.Size = new System.Drawing.Size(355, 339);
             this.groupBox_Reports.TabIndex = 4;
             this.groupBox_Reports.TabStop = false;
-            this.groupBox_Reports.Text = "گزارش‌های اینترنت";
+            this.groupBox_Reports.Text = "گزارش‌ها";
             // 
             // textBox_Log
             // 
@@ -1481,11 +1604,11 @@
             this.textBox_Log.TabIndex = 17;
             this.textBox_Log.WordWrap = false;
             // 
-            // دوربینهاToolStripMenuItem
+            // چتهایمجازToolStripMenuItem
             // 
-            this.دوربینهاToolStripMenuItem.Name = "دوربینهاToolStripMenuItem";
-            this.دوربینهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
-            this.دوربینهاToolStripMenuItem.Text = "دوربین‌ها";
+            this.چتهایمجازToolStripMenuItem.Name = "چتهایمجازToolStripMenuItem";
+            this.چتهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.چتهایمجازToolStripMenuItem.Text = "چت‌های مجاز";
             // 
             // IoT_ControlPanel
             // 
@@ -1643,5 +1766,18 @@
         private ToolStripMenuItem تازهسازیToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem دوربینهاToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem ماژولتولیدرنگWS2812ToolStripMenuItem;
+        private ToolStripMenuItem انتخابرنگپیکسلToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem_EntekhabRang;
+        private ToolStripMenuItem پرکردنصفحهToolStripMenuItem;
+        private ToolStripMenuItem پاککردنصفحهToolStripMenuItem;
+        private ToolStripMenuItem چراغهاToolStripMenuItem;
+        private ToolStripMenuItem قرمزToolStripMenuItem;
+        private ToolStripMenuItem سبزToolStripMenuItem;
+        private ToolStripMenuItem آبیToolStripMenuItem;
+        private ToolStripMenuItem حسگرتشخیصحرکتPIRToolStripMenuItem;
+        private ToolStripMenuItem فعالToolStripMenuItem;
+        private ToolStripMenuItem چتهایمجازToolStripMenuItem;
     }
 }
