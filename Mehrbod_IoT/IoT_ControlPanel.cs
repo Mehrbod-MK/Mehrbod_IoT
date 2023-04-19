@@ -8,6 +8,9 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using Telegram.Bot.Types;
 
+using NAudio;
+using NAudio.Wave;
+
 namespace Mehrbod_IoT
 {
     public partial class IoT_ControlPanel : Form
@@ -127,6 +130,50 @@ namespace Mehrbod_IoT
         {
             // Initialize camera devices.
             Initialize_ExternalDevices_Cameras();
+
+            // Initialize speakers (Playback devices).
+            Initialize_ExternalDevices_PlaybackDevices();
+
+            // Initialize microphones (Recording devices).
+            Initialize_ExternalDevices_RecordingDevices();
+        }
+
+        protected void Initialize_ExternalDevices_PlaybackDevices()
+        {
+            بلندگوهاToolStripMenuItem.DropDownItems.Clear();
+
+            for(int n = -1; n < WaveOut.DeviceCount; n++)
+            {
+                var playbackCaps = WaveOut.GetCapabilities(n);
+
+                ToolStripMenuItem menuItem_PLaybackDevice = new ToolStripMenuItem()
+                {
+                    Text = playbackCaps.ProductName,
+                    AutoToolTip = true,
+                    Tag = n
+                };
+
+                بلندگوهاToolStripMenuItem.DropDownItems.Add(menuItem_PLaybackDevice);
+            }
+        }
+
+        protected void Initialize_ExternalDevices_RecordingDevices()
+        {
+            میکروفونهاToolStripMenuItem.DropDownItems.Clear();
+
+            for (int n = -1; n < WaveIn.DeviceCount; n++)
+            {
+                var playbackCaps = WaveIn.GetCapabilities(n);
+
+                ToolStripMenuItem menuItem_PLaybackDevice = new ToolStripMenuItem()
+                {
+                    Text = playbackCaps.ProductName,
+                    AutoToolTip = true,
+                    Tag = n
+                };
+
+                میکروفونهاToolStripMenuItem.DropDownItems.Add(menuItem_PLaybackDevice);
+            }
         }
 
         protected void Initialize_ExternalDevices_Cameras()
@@ -346,7 +393,17 @@ namespace Mehrbod_IoT
                         // Check if input data is an inline callback query.
                         if(update.CallbackQuery != null)
                         {
-                            await Task.Run(() => Begin_Bot_InlineCallbackProcess(update.CallbackQuery));
+                            await Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    await Begin_Bot_InlineCallbackProcess(update.CallbackQuery);
+                                }
+                                catch(Exception ex)
+                                {
+                                    await botClient.AnswerCallbackQueryAsync(update.CallbackQuery.Id, "⚠ دستور نامعتبر.\n\n" + ex.Message, true);
+                                }
+                            });
                         }
 
                         // Check if input object is a message.
@@ -795,6 +852,7 @@ namespace Mehrbod_IoT
                                 // Set device flags.
                                 if (args[1] == "SET_DEV_FLAG")
                                 {
+                                    // MessageBox.Show("");
                                     // Check PIR sensor.
                                     if (args[2] == "CHECK_PIR_SENSOR")
                                         device_Flags |= IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR;
@@ -1347,6 +1405,32 @@ namespace Mehrbod_IoT
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "پیکسل در موقعیت (" + x.ToString() + ", " + y.ToString() + ") خاموش شد.");
             }
 
+            // PIR -> Display device Control Panel.
+            else if (args[0] == "MENU_DISPLAY_PANEL_PIR")
+            {
+                await IoT_Bot_Prompt_PIR_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // PIR -> Enable motion detection.
+            else if (args[0] == "SENSOR_PIR_ENABLE")
+            {
+                await IoT_SerialPort_SendData_Async("SET_DEV_FLAG CHECK_PIR_SENSOR");
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "حسگر تشخیص حرکت با موفقیت فعال شد.", true);
+                await IoT_Bot_Prompt_PIR_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // PIR -> Disable motion detection.
+            else if (args[0] == "SENSOR_PIR_DISABLE")
+            {
+                await IoT_SerialPort_SendData_Async("CLEAR_DEV_FLAG CHECK_PIR_SENSOR");
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "حسگر تشخیص حرکت با موفقیت غیرفعال شد.", true);
+                await IoT_Bot_Prompt_PIR_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // PIR -> End alarm.
+            else if (args[0] == "SENSOR_PIR_END_ALARM")
+            {
+                await IoT_SerialPort_SendData_Async("PIR END_ALARM");
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "هشدار با موفقیت متوقف شد.", true);
+            }
+
             // Callback -> Set Color Channel Value.
             else if (args[0] == "CB_SET_COLOR_CHANNEL_VALUE")
             {
@@ -1581,6 +1665,44 @@ namespace Mehrbod_IoT
                 return null;
         }
 
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_PIR_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_PIR_CP = "🕺 ماژول حسگر تشخیص حرکت PIR\n\n";
+            // MessageBox.Show("");
 
+            prompt_PIR_CP += "👈 وضعیت دستگاه:\n";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Detect_Sensor_PIR))
+                prompt_PIR_CP += "✅ <b>فعال</b>";
+            else
+                prompt_PIR_CP += "❌ <b>غیرفعال</b>";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_PIR = new List<List<InlineKeyboardButton>>() { 
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("✅ فعال کردن", "SENSOR_PIR_ENABLE"),
+                    InlineKeyboardButton.WithCallbackData("❌ غیرفعال کردن", "SENSOR_PIR_DISABLE"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🤚 توقف هشدار", "SENSOR_PIR_END_ALARM"),
+                },
+
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+                },
+            };
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_PIR_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_PIR));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_PIR_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_PIR));
+                else return null;
+            }
+            else
+                return null;
+        }
     }
 }

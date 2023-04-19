@@ -144,9 +144,11 @@
             this.فعالToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.اینترنتToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.شمارهتلفنهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.چتهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Reports = new System.Windows.Forms.GroupBox();
             this.textBox_Log = new System.Windows.Forms.TextBox();
-            this.چتهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.بلندگوهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.میکروفونهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Settings_SerialPort.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_Handshake)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_StopBits)).BeginInit();
@@ -1434,6 +1436,8 @@
             this.تازهسازیToolStripMenuItem,
             this.toolStripSeparator1,
             this.دوربینهاToolStripMenuItem,
+            this.بلندگوهاToolStripMenuItem,
+            this.میکروفونهاToolStripMenuItem,
             this.toolStripSeparator2,
             this.ماژولتولیدرنگWS2812ToolStripMenuItem,
             this.چراغهاToolStripMenuItem,
@@ -1556,7 +1560,7 @@
             // فعالToolStripMenuItem
             // 
             this.فعالToolStripMenuItem.Name = "فعالToolStripMenuItem";
-            this.فعالToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.فعالToolStripMenuItem.Size = new System.Drawing.Size(131, 26);
             this.فعالToolStripMenuItem.Text = "فعال؟";
             this.فعالToolStripMenuItem.Click += new System.EventHandler(this.فعالToolStripMenuItem_Click);
             // 
@@ -1575,8 +1579,14 @@
             // شمارهتلفنهایمجازToolStripMenuItem
             // 
             this.شمارهتلفنهایمجازToolStripMenuItem.Name = "شمارهتلفنهایمجازToolStripMenuItem";
-            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(220, 26);
             this.شمارهتلفنهایمجازToolStripMenuItem.Text = "شماره تلفن‌های مجاز";
+            // 
+            // چتهایمجازToolStripMenuItem
+            // 
+            this.چتهایمجازToolStripMenuItem.Name = "چتهایمجازToolStripMenuItem";
+            this.چتهایمجازToolStripMenuItem.Size = new System.Drawing.Size(220, 26);
+            this.چتهایمجازToolStripMenuItem.Text = "چت‌های مجاز";
             // 
             // groupBox_Reports
             // 
@@ -1604,11 +1614,17 @@
             this.textBox_Log.TabIndex = 17;
             this.textBox_Log.WordWrap = false;
             // 
-            // چتهایمجازToolStripMenuItem
+            // بلندگوهاToolStripMenuItem
             // 
-            this.چتهایمجازToolStripMenuItem.Name = "چتهایمجازToolStripMenuItem";
-            this.چتهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.چتهایمجازToolStripMenuItem.Text = "چت‌های مجاز";
+            this.بلندگوهاToolStripMenuItem.Name = "بلندگوهاToolStripMenuItem";
+            this.بلندگوهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.بلندگوهاToolStripMenuItem.Text = "بلندگوها";
+            // 
+            // میکروفونهاToolStripMenuItem
+            // 
+            this.میکروفونهاToolStripMenuItem.Name = "میکروفونهاToolStripMenuItem";
+            this.میکروفونهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.میکروفونهاToolStripMenuItem.Text = "میکروفون‌ها";
             // 
             // IoT_ControlPanel
             // 
@@ -1779,5 +1795,7 @@
         private ToolStripMenuItem حسگرتشخیصحرکتPIRToolStripMenuItem;
         private ToolStripMenuItem فعالToolStripMenuItem;
         private ToolStripMenuItem چتهایمجازToolStripMenuItem;
+        private ToolStripMenuItem بلندگوهاToolStripMenuItem;
+        private ToolStripMenuItem میکروفونهاToolStripMenuItem;
     }
 }
