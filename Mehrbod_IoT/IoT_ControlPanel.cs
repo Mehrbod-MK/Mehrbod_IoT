@@ -75,7 +75,7 @@ namespace Mehrbod_IoT
         FilterInfoCollection? filterInfoCollection_Cameras;
         VideoCaptureDevice? videoCaptureDevice;
 
-        int deviceIndex_Camera = -1;
+        int deviceIndex_Camera = 0;
         int deviceIndex_Speaker = 0;
         int deviceIndex_Microphone = 0;
 
@@ -218,45 +218,78 @@ namespace Mehrbod_IoT
 
         protected void Initialize_ExternalDevices_Cameras()
         {
+            /*            دوربینهاToolStripMenuItem.DropDownItems.Clear();
+
+                        filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                        int i = 0;
+                        foreach (FilterInfo device in filterInfoCollection_Cameras)
+                        {
+                            ToolStripMenuItem menuItem_Cameras = new ToolStripMenuItem()
+                            {
+                                Text = device.Name,
+                                AutoToolTip = true,
+                                Tag = i++,
+                            };
+                            menuItem_Cameras.Click += (sender, e) =>
+                            {
+                                ToolStripMenuItem? menu_Camera = sender as ToolStripMenuItem;
+                                if (menu_Camera != null)
+                                {
+                                    int tag = (int)menu_Camera.Tag;
+
+                                    deviceIndex_Camera = tag;
+                                }
+
+                                for (int a = 0; a < دوربینهاToolStripMenuItem.DropDownItems.Count; a++)
+                                    if (a == deviceIndex_Camera)
+                                        ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[a]).Checked = true;
+                                    else
+                                        ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[a]).Checked = false;
+                            };
+                            دوربینهاToolStripMenuItem.DropDownItems.Add(menuItem_Cameras);
+                        }
+                        if (i > 0)
+                        {
+                            دوربینهاToolStripMenuItem.Enabled = true;
+                            // deviceIndex_Camera = 0;
+                            ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[0]).Checked = true;
+                        }
+                        else
+                        {
+                            دوربینهاToolStripMenuItem.Enabled = false;
+                        }*/
+
             دوربینهاToolStripMenuItem.DropDownItems.Clear();
 
             filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            int i = 0;
-            foreach (FilterInfo device in filterInfoCollection_Cameras)
+
+            if (filterInfoCollection_Cameras.Count <= 0)
+                deviceIndex_Camera = -1;
+
+            for (int n = 0; n < filterInfoCollection_Cameras.Count; n++)
             {
-                ToolStripMenuItem menuItem_Cameras = new ToolStripMenuItem()
+                var deviceName = filterInfoCollection_Cameras[n].Name;
+
+                ToolStripMenuItem menuItem_CameraDevice = new ToolStripMenuItem()
                 {
-                    Text = device.Name,
+                    Text = deviceName,
                     AutoToolTip = true,
-                    Tag = i++,
+                    Tag = n
                 };
-                menuItem_Cameras.Click += (sender, e) =>
+                menuItem_CameraDevice.Checked = n == deviceIndex_Camera;
+                menuItem_CameraDevice.Click += (sender, e) =>
                 {
-                    ToolStripMenuItem? menu_Camera = sender as ToolStripMenuItem;
-                    if (menu_Camera != null)
+                    ToolStripMenuItem? menItem = sender as ToolStripMenuItem;
+                    if (menItem != null)
                     {
-                        int tag = (int)menu_Camera.Tag;
+                        int index = (int)menItem.Tag;
+                        deviceIndex_Camera = index;
 
-                        deviceIndex_Camera = tag;
+                        Initialize_ExternalDevices_Cameras();
                     }
-
-                    for (int a = 0; a < دوربینهاToolStripMenuItem.DropDownItems.Count; a++)
-                        if (a == deviceIndex_Camera)
-                            ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[a]).Checked = true;
-                        else
-                            ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[a]).Checked = false;
                 };
-                دوربینهاToolStripMenuItem.DropDownItems.Add(menuItem_Cameras);
-            }
-            if (i > 0)
-            {
-                دوربینهاToolStripMenuItem.Enabled = true;
-                // deviceIndex_Camera = 0;
-                ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[0]).Checked = true;
-            }
-            else
-            {
-                دوربینهاToolStripMenuItem.Enabled = false;
+
+                دوربینهاToolStripMenuItem.DropDownItems.Add(menuItem_CameraDevice);
             }
         }
 
@@ -1598,7 +1631,7 @@ namespace Mehrbod_IoT
                 {
                     deviceIndex_Camera = camInd;
                     await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دوربین پیش‌فرض به " + filterInfoCollection_Cameras[camInd].Name + " تغییر یافت.");
-                    Invoke(() => { Initialize_ExternalDevices_Cameras(); دوربینهاToolStripMenuItem.DropDownItems[deviceIndex_Camera] });
+                    Invoke(() => { Initialize_ExternalDevices_Cameras(); });
                     await IoT_Bot_Prompt_Cameras_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
                 }
                 else
