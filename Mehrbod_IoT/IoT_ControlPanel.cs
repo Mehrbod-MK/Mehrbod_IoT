@@ -764,6 +764,15 @@ namespace Mehrbod_IoT
             }
         }
 
+        private async Task Begin_IoT_WS2812_SetPixel_Async(int x, int y, int r, int g, int b, string handle = "")
+        {
+            await IoT_SerialPort_SendData_Async("WS2812 SET_PIXEL " + x.ToString() + " " + y.ToString() + " " + r.ToString() + " " + g.ToString() + " " + b.ToString() + " " + handle);
+        }
+        private async Task Begin_IoT_WS2812_SetPixel_Async(int x, int y, Color col, string handle = "")
+        {
+            await IoT_SerialPort_SendData_Async("WS2812 SET_PIXEL " + x.ToString() + " " + y.ToString() + " " + col.R.ToString() + " " + col.G.ToString() + " " + col.B.ToString() + " " + handle);
+        }
+
         private async Task Begin_SerialPortProcess()
         {
             while (true)
@@ -1287,16 +1296,79 @@ namespace Mehrbod_IoT
                 await IoT_Bot_Prompt_WS2812_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
 
-            // WS2812 -> Set Background with currentt color.
+            // WS2812 -> Set Background with current color.
             if (args[0] == "WS2812_SET_BKG")
             {
-                _ = IoT_SerialPort_SendData_Async("WS2812 SET_BKG_COLOR " + color_WS2812_Pixel.R + " " + color_WS2812_Pixel.G + " " + color_WS2812_Pixel.R);
+                _ = IoT_SerialPort_SendData_Async("WS2812 SET_BKG_COLOR " + color_WS2812_Pixel.R + " " + color_WS2812_Pixel.G + " " + color_WS2812_Pixel.B);
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دستور رنگ‌آمیزی صفحه با موفقیت اجرا شد.");
             }
+            // WS2812 -> Clear background.
             else if (args[0] == "WS2812_CLEAR_BKG")
             {
                 _ = IoT_SerialPort_SendData_Async("WS2812 CLEAR_BKG");
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دستور پاکسازی صفحه با موفقیت اجرا شد.");
+            }
+            // WS2812 -> Color Channel Picker.
+            else if (args[0] == "WS2812_SET_COLOR_CHANNEL")
+            {
+                await IoT_Bot_Prompt_ColorChannelPicker_Async(callbackQuery.Message.Chat.Id, args[1], callbackQuery.Message, callbackQuery);
+            }
+            // WS2812 -> Display Pixels map.
+            else if (args[0] == "WS2812_DISPLAY_PIXELS")
+            {
+                await IoT_Bot_Prompt_WS2812_DisplayPixels_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // WS2812 -> Set Pixel.
+            else if (args[0] == "WS2812_SET_PIXEL")
+            {
+                int.TryParse(args[1], out int x);
+                int.TryParse(args[2], out int y);
+
+                await Begin_IoT_WS2812_SetPixel_Async(x, y, color_WS2812_Pixel);
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "پیکسل در موقعیت (" + x.ToString() + ", " + y.ToString() + ") رنگ‌آمیزی شد.");
+            }
+            // WS2812 -> Display clearing pixels map.
+            else if (args[0] == "WS2812_CLEAR_PIXELS")
+            {
+                await IoT_Bot_Prompt_WS2812_ClearPixels_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // WS2812 -> Clear Pixel.
+            else if (args[0] == "WS2812_CLEAR_PIXEL")
+            {
+                int.TryParse(args[1], out int x);
+                int.TryParse(args[2], out int y);
+
+                await Begin_IoT_WS2812_SetPixel_Async(x, y, 0, 0, 0);
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "پیکسل در موقعیت (" + x.ToString() + ", " + y.ToString() + ") خاموش شد.");
+            }
+
+            // Callback -> Set Color Channel Value.
+            else if (args[0] == "CB_SET_COLOR_CHANNEL_VALUE")
+            {
+                byte r = color_WS2812_Pixel.R;
+                byte g = color_WS2812_Pixel.G;
+                byte b = color_WS2812_Pixel.B;
+
+                if (args[1] == "R")
+                    byte.TryParse(args[2], out r);
+                else if (args[1] == "G")
+                    byte.TryParse(args[2], out g);
+                else if (args[1] == "B")
+                    byte.TryParse(args[2], out b);
+
+                color_WS2812_Pixel = Color.FromArgb(r, g, b);
+
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "مقدار کانال رنگی با موفقیت تغییر پیدا کرد.");
+                await IoT_Bot_Prompt_WS2812_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // Callback -> Return to a previous menu.
+            else if (args[0] == "CB_RETURN_TO")
+            {
+                // Return to main menu.
+                if (args[1] == "MAIN_MENU")
+                    await IoT_Bot_Prompt_MainMenu_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+                else if (args[1] == "WS2812_CP")
+                    await IoT_Bot_Prompt_WS2812_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
         }
 
@@ -1337,14 +1409,139 @@ namespace Mehrbod_IoT
                 {
                     InlineKeyboardButton.WithCallbackData("🧹 پاکسازی صفحه", "WS2812_CLEAR_BKG"),
                 },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🔲 رنگ‌آمیزی پیکسل‌ها", "WS2812_DISPLAY_PIXELS"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("⬜ پاکسازی پیکسل‌ها", "WS2812_CLEAR_PIXELS"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+                },
             };
 
             if (botClient != null)
             {
                 if (callbackQuery == null)
-                    return await botClient.SendTextMessageAsync(chatID, prompt_WS2812_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_WS2812));
+                    return await botClient.SendTextMessageAsync(chatID, prompt_WS2812_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message?.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_WS2812));
                 else if (callbackQuery.Message != null)
                     return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_WS2812_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_WS2812));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_ColorChannelPicker_Async(long chatID, string channelStr, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_ColorChannelPicker = "🌈 انتخاب مقدار کانال رنگی 👇";
+            string channelIndicator = "";
+            if (channelStr == "R")
+                channelIndicator = "🔴";
+            else if (channelStr == "G")
+                channelIndicator = "🟢";
+            else if (channelStr == "B")
+                channelIndicator = "🔵";
+
+            // Generate 255 keyboard buttons.
+            List<List<InlineKeyboardButton>> inlineKeyboard_ChannelValues = new List<List<InlineKeyboardButton>>();
+            for(int i = 0; i <= 255; i += 5)
+            {
+                List<InlineKeyboardButton> keysPerRow = new List<InlineKeyboardButton>();
+
+                keysPerRow.Add(InlineKeyboardButton.WithCallbackData(channelIndicator + " " + i.ToString(), "CB_SET_COLOR_CHANNEL_VALUE~" + channelStr + "~" + i.ToString()));
+                i++;
+                keysPerRow.Add(InlineKeyboardButton.WithCallbackData(channelIndicator + " " + i.ToString(), "CB_SET_COLOR_CHANNEL_VALUE~" + channelStr + "~" + i.ToString()));
+                i++;
+                keysPerRow.Add(InlineKeyboardButton.WithCallbackData(channelIndicator + " " + i.ToString(), "CB_SET_COLOR_CHANNEL_VALUE~" + channelStr + "~" + i.ToString()));
+                i++;
+                keysPerRow.Add(InlineKeyboardButton.WithCallbackData(channelIndicator + " " + i.ToString(), "CB_SET_COLOR_CHANNEL_VALUE~" + channelStr + "~" + i.ToString()));
+                i++;
+
+                inlineKeyboard_ChannelValues.Add(keysPerRow);
+            }
+
+            // No more spaces available for buttons! (Telegram limitation).
+            /*inlineKeyboard_ChannelValues.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به پنل ماژول 👈", "CB_RETURN_TO~WS2812_CP"),
+                });*/
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_ColorChannelPicker, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_ChannelValues));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_ColorChannelPicker, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_ChannelValues));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_WS2812_DisplayPixels_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_WS2812_DisplayPixels = "🔲 نقشه پیکسل‌های ماژول WS2812.\n\n👇 با کلیک بر روی دکمه‌های ذیل، پیکسلها رنگ می‌شوند.";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_WS2812_Pixels = new List<List<InlineKeyboardButton>>();
+
+            for(int i = 0; i < _NUM_LEDS_ROWS; i++)
+            {
+                List<InlineKeyboardButton> buttonsPerRow = new List<InlineKeyboardButton>();
+                for(int j = 0; j < _NUM_LEDS_COLS; j++)
+                {
+                    buttonsPerRow.Add(InlineKeyboardButton.WithCallbackData("⬜", "WS2812_SET_PIXEL~" + j.ToString() + "~" + i.ToString()));
+                }
+                inlineKeyboard_WS2812_Pixels.Add(buttonsPerRow);
+            }
+
+            inlineKeyboard_WS2812_Pixels.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به پنل ماژول 👈", "CB_RETURN_TO~WS2812_CP"),
+                });
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_WS2812_DisplayPixels, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_WS2812_Pixels));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_WS2812_DisplayPixels, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_WS2812_Pixels));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_WS2812_ClearPixels_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_WS2812_ClearPixels = "🔲 نقشه پیکسل‌های ماژول WS2812.\n\n👇 با کلیک بر روی دکمه‌های ذیل، پیکسلها خاموش می‌شوند.";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_WS2812_Pixels = new List<List<InlineKeyboardButton>>();
+
+            for (int i = 0; i < _NUM_LEDS_ROWS; i++)
+            {
+                List<InlineKeyboardButton> buttonsPerRow = new List<InlineKeyboardButton>();
+                for (int j = 0; j < _NUM_LEDS_COLS; j++)
+                {
+                    buttonsPerRow.Add(InlineKeyboardButton.WithCallbackData("⬛", "WS2812_CLEAR_PIXEL~" + j.ToString() + "~" + i.ToString()));
+                }
+                inlineKeyboard_WS2812_Pixels.Add(buttonsPerRow);
+            }
+
+            inlineKeyboard_WS2812_Pixels.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به پنل ماژول 👈", "CB_RETURN_TO~WS2812_CP"),
+                });
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_WS2812_ClearPixels, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_WS2812_Pixels));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_WS2812_ClearPixels, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_WS2812_Pixels));
                 else return null;
             }
             else
