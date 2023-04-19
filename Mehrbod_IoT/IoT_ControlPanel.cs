@@ -74,6 +74,8 @@ namespace Mehrbod_IoT
         VideoCaptureDevice? videoCaptureDevice;
 
         int deviceIndex_Camera = -1;
+        int deviceIndex_Speaker = -1;
+        int deviceIndex_Microphone = -1;
 
         public IoT_ControlPanel()
         {
@@ -142,18 +144,31 @@ namespace Mehrbod_IoT
         {
             بلندگوهاToolStripMenuItem.DropDownItems.Clear();
 
-            for(int n = -1; n < WaveOut.DeviceCount; n++)
+            if (WaveOut.DeviceCount > 0)
+                deviceIndex_Speaker = 0;
+
+            for (int n = 0; n < WaveOut.DeviceCount; n++)
             {
                 var playbackCaps = WaveOut.GetCapabilities(n);
 
-                ToolStripMenuItem menuItem_PLaybackDevice = new ToolStripMenuItem()
+                ToolStripMenuItem menuItem_PlaybackDevice = new ToolStripMenuItem()
                 {
                     Text = playbackCaps.ProductName,
                     AutoToolTip = true,
                     Tag = n
                 };
+                menuItem_PlaybackDevice.Checked = n == deviceIndex_Speaker;
+                menuItem_PlaybackDevice.Click += (sender, e) =>
+                {
+                    ToolStripMenuItem? menItem = sender as ToolStripMenuItem;
+                    if (menItem != null)
+                    {
+                        int index = (int)menItem.Tag;
+                        deviceIndex_Speaker = index;
+                    }
+                };
 
-                بلندگوهاToolStripMenuItem.DropDownItems.Add(menuItem_PLaybackDevice);
+                بلندگوهاToolStripMenuItem.DropDownItems.Add(menuItem_PlaybackDevice);
             }
         }
 
@@ -161,18 +176,31 @@ namespace Mehrbod_IoT
         {
             میکروفونهاToolStripMenuItem.DropDownItems.Clear();
 
-            for (int n = -1; n < WaveIn.DeviceCount; n++)
-            {
-                var playbackCaps = WaveIn.GetCapabilities(n);
+            if (WaveIn.DeviceCount > 0)
+                deviceIndex_Microphone = 0;
 
-                ToolStripMenuItem menuItem_PLaybackDevice = new ToolStripMenuItem()
+            for (int n = 0; n < WaveIn.DeviceCount; n++)
+            {
+                var recordingCaps = WaveIn.GetCapabilities(n);
+
+                ToolStripMenuItem menuItem_RecordingDevice = new ToolStripMenuItem()
                 {
-                    Text = playbackCaps.ProductName,
+                    Text = recordingCaps.ProductName,
                     AutoToolTip = true,
                     Tag = n
                 };
+                menuItem_RecordingDevice.Checked = n == deviceIndex_Microphone;
+                menuItem_RecordingDevice.Click += (sender, e) =>
+                {
+                    ToolStripMenuItem? menItem = sender as ToolStripMenuItem;
+                    if (menItem != null)
+                    {
+                        int index = (int)menItem.Tag;
+                        deviceIndex_Microphone = index;
+                    }
+                };
 
-                میکروفونهاToolStripMenuItem.DropDownItems.Add(menuItem_PLaybackDevice);
+                میکروفونهاToolStripMenuItem.DropDownItems.Add(menuItem_RecordingDevice);
             }
         }
 
