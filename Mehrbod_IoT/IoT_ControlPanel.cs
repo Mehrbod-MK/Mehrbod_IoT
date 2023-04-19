@@ -1295,9 +1295,14 @@ namespace Mehrbod_IoT
             {
                 await IoT_Bot_Prompt_WS2812_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
+            // Main Menu -> Display SSD1306 device Control Panel.
+            else if (args[0] == "MENU_DISPLAY_PANEL_SSD1306")
+            {
+                await IoT_Bot_Prompt_SSD1306_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
 
             // WS2812 -> Set Background with current color.
-            if (args[0] == "WS2812_SET_BKG")
+            else if (args[0] == "WS2812_SET_BKG")
             {
                 _ = IoT_SerialPort_SendData_Async("WS2812 SET_BKG_COLOR " + color_WS2812_Pixel.R + " " + color_WS2812_Pixel.G + " " + color_WS2812_Pixel.B);
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دستور رنگ‌آمیزی صفحه با موفقیت اجرا شد.");
@@ -1547,5 +1552,35 @@ namespace Mehrbod_IoT
             else
                 return null;
         }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_SSD1306_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_SSD1306_CP = "🖥 ماژول نمایشگر OLED SSD1306\n\n";
+
+            prompt_SSD1306_CP += "👈 وضعیت دستگاه:\n";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_Init_SSD1306))
+                prompt_SSD1306_CP += "✅ <b>آماده به کار</b>";
+            else
+                prompt_SSD1306_CP += "❓ <b>نامشخص</b>";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_SSD1306 = new List<List<InlineKeyboardButton>>();
+            inlineKeyboard_SSD1306.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+                });
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_SSD1306_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_SSD1306));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_SSD1306_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_SSD1306));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+
     }
 }
