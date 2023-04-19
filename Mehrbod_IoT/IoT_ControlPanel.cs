@@ -251,7 +251,7 @@ namespace Mehrbod_IoT
             if (i > 0)
             {
                 دوربینهاToolStripMenuItem.Enabled = true;
-                deviceIndex_Camera = 0;
+                // deviceIndex_Camera = 0;
                 ((ToolStripMenuItem)دوربینهاToolStripMenuItem.DropDownItems[0]).Checked = true;
             }
             else
@@ -1429,6 +1429,11 @@ namespace Mehrbod_IoT
             {
                 await IoT_Bot_Prompt_SSD1306_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
+            // Main Menu -> Display Cameras control panel.
+            else if (args[0] == "MENU_DISPLAY_PANEL_CAMERAS")
+            {
+                await IoT_Bot_Prompt_Cameras_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
 
             // WS2812 -> Set Background with current color.
             else if (args[0] == "WS2812_SET_BKG")
@@ -1581,6 +1586,37 @@ namespace Mehrbod_IoT
                 {
                     await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ خطا در پردازش درخواست:\n\n" + ex.Message, true);
                 }
+            }
+
+            // Camera - Set default Camera device at specified index.
+            else if (args[0] == "CAMERA_SET_INDEX")
+            {
+                filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                int.TryParse(args[1], out int camInd);
+
+                if (camInd >= 0 && camInd < filterInfoCollection_Cameras.Count)
+                {
+                    deviceIndex_Camera = camInd;
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "دوربین پیش‌فرض به " + filterInfoCollection_Cameras[camInd].Name + " تغییر یافت.");
+                    Invoke(() => { Initialize_ExternalDevices_Cameras(); دوربینهاToolStripMenuItem.DropDownItems[deviceIndex_Camera] });
+                    await IoT_Bot_Prompt_Cameras_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+                }
+                else
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ این دستگاه دوربین وجود ندارد یا اتصال آن قطع شده است.");
+            }
+
+            // Camera - Send a test screenshot from specified Camera Device index.
+            else if (args[0] == "CAMERA_TEST_INDEX")
+            {
+                filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                int.TryParse(args[1], out int camInd);
+
+                if (camInd >= 0 && camInd < filterInfoCollection_Cameras.Count)
+                {
+                    await IoT_Bot_CaptureScreenShot_Camera_Async(callbackQuery.Message.Chat.Id, camInd, 1, callbackQuery);
+                }
+                else
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ این دستگاه دوربین وجود ندارد یا اتصال آن قطع شده است.");
             }
         }
 
@@ -1974,6 +2010,44 @@ namespace Mehrbod_IoT
             }
         }
 
-        
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_Cameras_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery callbackQuery = null)
+        {
+            string prompt_CamerasCP = "📷 پنل دستگاه‌های ضبط تصویر\n\n";
+            prompt_CamerasCP += "👈 با کلیک بر روی نام یک دستگاه، آن را به صورت پیش‌فرض انتخاب می‌کنید. این دستگاه در هر زمان خطر، برای شما اطلاعات مورد نیاز را ارسال خواهد کرد.\n\n";
+            prompt_CamerasCP += "👇 همچنین، می‌توانید اقدامات دیگری را بر روی دستگاه مورد نظر انجام دهید.";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_Cameras = new List<List<InlineKeyboardButton>>();
+
+            filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            for(int i = 0; i < filterInfoCollection_Cameras.Count; i++)
+            {
+                string deviceName = filterInfoCollection_Cameras[i].Name;
+                if (deviceIndex_Camera == i)
+                    deviceName = "✅📸 " + deviceName;
+                else
+                    deviceName = "📸 " + deviceName;
+
+                inlineKeyboard_Cameras.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData(deviceName, "CAMERA_SET_INDEX~" + i.ToString()),
+                    InlineKeyboardButton.WithCallbackData("👁 آزمایش", "CAMERA_TEST_INDEX~" + i.ToString()),
+                });
+            }
+            inlineKeyboard_Cameras.Add(new List<InlineKeyboardButton>()
+            {
+                InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+            });
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_CamerasCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_Cameras));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_CamerasCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_Cameras));
+                else return null;
+            }
+            else
+                return null;
+        }
     }
 }
