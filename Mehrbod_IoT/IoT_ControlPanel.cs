@@ -1499,6 +1499,12 @@ namespace Mehrbod_IoT
             else if (args[0] == "SENSOR_PIR_END_ALARM")
             {
                 await IoT_SerialPort_SendData_Async("PIR END_ALARM");
+                if (device_waveOut != null)
+                {
+                    device_waveOut.Stop();
+                    device_waveOut.Dispose();
+                    device_waveOut = null;
+                }                    
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "هشدار با موفقیت متوقف شد.", true);
             }
 
@@ -1846,6 +1852,10 @@ namespace Mehrbod_IoT
                 {
                     InlineKeyboardButton.WithCallbackData("📷 گرفتن عکس با دوربین", "CB_CAPTURE_SCREENSHOT_CAMERA~" + deviceIndex_Camera),
                 },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🖐 توقف هشدار", "SENSOR_PIR_END_ALARM"),
+                },
             };
 
             if (botClient != null)
@@ -1963,5 +1973,7 @@ namespace Mehrbod_IoT
                 return false;
             }
         }
+
+        
     }
 }
