@@ -1009,6 +1009,12 @@ namespace Mehrbod_IoT
                                         {
                                             pictureBox_Objects_PIR.Image = Properties.Resources.obj_PIR_Triggered;
                                         });
+
+                                        // Alert each registered ChatID via Telegram Bot.
+                                        foreach(var chatId in list_Authorized_ChatIDs)
+                                        {
+                                            await Task.Run(() => IoT_Bot_Prompt_AlertMotionSensor_Async(chatId));
+                                        }
                                     }
                                 }
                             }
@@ -1329,6 +1335,22 @@ namespace Mehrbod_IoT
                 prompt_MainMenu += "👁 <b>" + filterInfoCollection_Cameras[deviceIndex_Camera].Name + "</b>";
             prompt_MainMenu += '\n';
 
+            prompt_MainMenu += '\n';
+            prompt_MainMenu += "🎤 دستگاه ضبط صوت فعال:\n";
+            if (deviceIndex_Microphone < 0 || WaveIn.DeviceCount < 1 || deviceIndex_Microphone >= WaveIn.DeviceCount)
+                prompt_MainMenu += "❌ <b>میکروفون موجود نمی‌باشد</b>";
+            else
+                prompt_MainMenu += "🎙 <b>" + WaveIn.GetCapabilities(deviceIndex_Microphone).ProductName + "</b>";
+            prompt_MainMenu += '\n';
+
+            prompt_MainMenu += '\n';
+            prompt_MainMenu += "🔊 دستگاه پخش صدای فعال:\n";
+            if (deviceIndex_Speaker < 0 || WaveOut.DeviceCount < 1 || deviceIndex_Speaker >= WaveOut.DeviceCount)
+                prompt_MainMenu += "❌ <b>بلندگو موجود نمی‌باشد</b>";
+            else
+                prompt_MainMenu += "🔈 <b>" + WaveOut.GetCapabilities(deviceIndex_Speaker).ProductName + "</b>";
+            prompt_MainMenu += '\n';
+
             // Main Menu inline keyboard.
             List<List<InlineKeyboardButton>> inlineKeyboard_MainMenu = new List<List<InlineKeyboardButton>>()
             {
@@ -1350,7 +1372,15 @@ namespace Mehrbod_IoT
                 },
                 new List<InlineKeyboardButton>()
                 {
-                    InlineKeyboardButton.WithCallbackData("📷 دوربین‌ها", "MENU_DISPLAY_PANEL_LEDS"),
+                    InlineKeyboardButton.WithCallbackData("📷 دوربین‌ها", "MENU_DISPLAY_PANEL_CAMERAS"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🎤 میکروفون‌ها", "MENU_DISPLAY_PANEL_MICROPHONES"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🔊 بلندگوها", "MENU_DISPLAY_PANEL_SPEAKERS"),
                 },
             };
 
@@ -1728,6 +1758,40 @@ namespace Mehrbod_IoT
                 else if (callbackQuery.Message != null)
                     return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_PIR_CP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_PIR));
                 else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_AlertMotionSensor_Async(long chatID)
+        {
+            string prompt_Alert_PIR = "<b>⚠ خطر\n\n";
+
+            prompt_Alert_PIR += "‼ حسگر تشخیص حرکت، فعال شده است!\n";
+            prompt_Alert_PIR += "❗ این بدین معناست که شخصی/چیزی در محل رصد حسگر حرکت کرده است.\n\n";
+            prompt_Alert_PIR += "❓ چه اقداماتی باید انجام شود؟ از گزینه‌های ذیل، انتخاب کنید: 👇";
+            
+            prompt_Alert_PIR += "</b>";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_AlertPIR = new List<List<InlineKeyboardButton>>()
+            {
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🎙 شنود با استفاده از میکروفون", "CB_RECORD_MICROPHONE~" + deviceIndex_Microphone.ToString()),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🔊 پخش صدای آزاردهنده از بلندگو", "CB_PLAY_SINE~" + deviceIndex_Speaker),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("📷 گرفتن عکس با دوربین", "CB_TAKE_SCREENSHOT_CAMERA~" + deviceIndex_Camera),
+                },
+            };
+
+            if (botClient != null)
+            {
+                return await botClient.SendTextMessageAsync(chatID, prompt_Alert_PIR, Telegram.Bot.Types.Enums.ParseMode.Html, null, false, false, true, null, true, new InlineKeyboardMarkup(inlineKeyboard_AlertPIR));
             }
             else
                 return null;
