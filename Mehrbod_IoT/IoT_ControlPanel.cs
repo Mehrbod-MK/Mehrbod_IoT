@@ -10,6 +10,8 @@ using Telegram.Bot.Types;
 
 using NAudio;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using System.IO.Pipes;
 
 namespace Mehrbod_IoT
 {
@@ -74,8 +76,14 @@ namespace Mehrbod_IoT
         VideoCaptureDevice? videoCaptureDevice;
 
         int deviceIndex_Camera = -1;
-        int deviceIndex_Speaker = -1;
-        int deviceIndex_Microphone = -1;
+        int deviceIndex_Speaker = 0;
+        int deviceIndex_Microphone = 0;
+
+        // Speaker.
+        WaveOutEvent? device_waveOut;
+
+        // Microphone.
+        WaveInEvent? device_waveIn;
 
         public IoT_ControlPanel()
         {
@@ -144,8 +152,8 @@ namespace Mehrbod_IoT
         {
             بلندگوهاToolStripMenuItem.DropDownItems.Clear();
 
-            if (WaveOut.DeviceCount > 0)
-                deviceIndex_Speaker = 0;
+            if (WaveOut.DeviceCount <= 0)
+                deviceIndex_Speaker = -1;
 
             for (int n = 0; n < WaveOut.DeviceCount; n++)
             {
@@ -165,6 +173,8 @@ namespace Mehrbod_IoT
                     {
                         int index = (int)menItem.Tag;
                         deviceIndex_Speaker = index;
+
+                        Initialize_ExternalDevices_PlaybackDevices();
                     }
                 };
 
@@ -176,8 +186,8 @@ namespace Mehrbod_IoT
         {
             میکروفونهاToolStripMenuItem.DropDownItems.Clear();
 
-            if (WaveIn.DeviceCount > 0)
-                deviceIndex_Microphone = 0;
+            if (WaveIn.DeviceCount <= 0)
+                deviceIndex_Microphone = -1;
 
             for (int n = 0; n < WaveIn.DeviceCount; n++)
             {
@@ -197,6 +207,8 @@ namespace Mehrbod_IoT
                     {
                         int index = (int)menItem.Tag;
                         deviceIndex_Microphone = index;
+
+                        Initialize_ExternalDevices_RecordingDevices();
                     }
                 };
 
@@ -496,7 +508,8 @@ namespace Mehrbod_IoT
                 }
                 catch(Exception ex) 
                 {
-                    IoT_Log("ارتباط با وب‌سرور با اختلال روبه‌رو شد:\t" + ex.Message);
+                    IoT_Log("ارتباط با وب‌سرور با اختلال روبه‌رو شد:\t" + ex.Message + '\t' + "تلاش برای برقراری دوباره ارتباط...");
+                    botClient = new(textBox_InternetSettings_BotToken.Text.Trim());
                     continue;
                 }
             }
@@ -1517,6 +1530,52 @@ namespace Mehrbod_IoT
                 else if (args[1] == "WS2812_CP")
                     await IoT_Bot_Prompt_WS2812_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
+            // Callback -> Play Sine Wave on a specific playback device index.
+            else if (args[0] == "CB_PLAY_SINE")
+            {
+                int.TryParse(args[1], out int devIndex);
+
+                try
+                {
+                    device_waveOut = new WaveOutEvent() { DeviceNumber = devIndex, Volume = 1.0f };
+                    device_waveOut.Init(new SignalGenerator() { Frequency = 500, Gain = 0.5, Type = SignalGeneratorType.Square });
+                    device_waveOut.Play();
+
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "🔊 صدا با موفقیت در حال پخش از دستگاه " + WaveOut.GetCapabilities(devIndex).ProductName + " می‌باشد.", true);
+                }
+                catch(Exception ex)
+                {
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ خطا در پردازش درخواست:\n\n" + ex.Message, true);
+                }
+            }
+            // Callback -> Record microphone audio from a specific recording device for small amount of seconds.
+            else if (args[0] == "CB_RECORD_MICROPHONE")
+            {
+                int.TryParse(args[1], out int devIndex);
+
+                try
+                {
+                    await IoT_Bot_RecordAudio_Async(callbackQuery.Message.Chat.Id, 30, devIndex, callbackQuery);
+                }
+                catch (Exception ex)
+                {
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ خطا در پردازش درخواست:\n\n" + ex.Message, true);
+                }
+            }
+            // Callback -> Captrue screenshots from a specific capture device for a certain number of times.
+            else if (args[0] == "CB_CAPTURE_SCREENSHOT_CAMERA")
+            {
+                int.TryParse(args[1], out int devIndex);
+
+                try
+                {
+                    await IoT_Bot_CaptureScreenShot_Camera_Async(callbackQuery.Message.Chat.Id, deviceIndex_Camera, 3, callbackQuery);
+                }
+                catch(Exception ex)
+                {
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ خطا در پردازش درخواست:\n\n" + ex.Message, true);
+                }
+            }
         }
 
         protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_WS2812_CP_Async(long chatID, Telegram.Bot.Types.Message? message, CallbackQuery? callbackQuery = null)
@@ -1785,7 +1844,7 @@ namespace Mehrbod_IoT
                 },
                 new List<InlineKeyboardButton>()
                 {
-                    InlineKeyboardButton.WithCallbackData("📷 گرفتن عکس با دوربین", "CB_TAKE_SCREENSHOT_CAMERA~" + deviceIndex_Camera),
+                    InlineKeyboardButton.WithCallbackData("📷 گرفتن عکس با دوربین", "CB_CAPTURE_SCREENSHOT_CAMERA~" + deviceIndex_Camera),
                 },
             };
 
@@ -1795,6 +1854,114 @@ namespace Mehrbod_IoT
             }
             else
                 return null;
+        }
+
+        protected async Task<bool> IoT_Bot_RecordAudio_Async(long chatID, int record_Seconds = 5, int recordingDevice_Index = 0, CallbackQuery? callbackQuery = null)
+        {
+            try
+            {
+                device_waveIn = new WaveInEvent() { DeviceNumber = deviceIndex_Microphone };
+                var writer = new WaveFileWriter(Environment.CurrentDirectory + @"\recording.wav", device_waveIn.WaveFormat);
+                device_waveIn.DataAvailable += (s, a) =>
+                {
+                    writer.WriteAsync(a.Buffer, 0, a.BytesRecorded);
+                    if (writer.Position > device_waveIn.WaveFormat.AverageBytesPerSecond * record_Seconds)
+                    {
+                        device_waveIn.StopRecording();
+                        writer.Close();
+                    }  
+                };
+                device_waveIn.RecordingStopped += async (sender, e) =>
+                {
+                    FileStream fileStream = new FileStream(Environment.CurrentDirectory + @"\recording.wav", FileMode.Open, FileAccess.Read);
+                    // InputMediaDocument media_Recording = new InputMediaDocument(new InputMedia(fileStream, "Recording_" + DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + "_" + DateTime.Now.Hour + "_" + DateTime.Now.Minute + "_" + DateTime.Now.Second));
+                    if (botClient != null)
+                        await botClient.SendTextMessageAsync(chatID, "✅🎙 ضبط صدا به پایان رسید.\n🔃 در حال بارگذاری بر روی سرور...\n🙏لطفاً شکیبا باشید.", Telegram.Bot.Types.Enums.ParseMode.Html, null, null, true, true, null, true, _COMMAND_REMOVE_KEYBOARD);
+                    if (botClient != null)
+                        await botClient.SendDocumentAsync(chatID, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fileStream, "Recording_" + DateTime.Now.Year + "_" + DateTime.Now.Month + "_" + DateTime.Now.Day + "_" + DateTime.Now.Hour + "_" + DateTime.Now.Minute + "_" + DateTime.Now.Second + ".wav"), null, "ضبط صدا به مدت " + record_Seconds.ToString() + " ثانیه.\n\n" + DateTime.Now.ToString(), Telegram.Bot.Types.Enums.ParseMode.Html, null, false, false, true, null, true, _COMMAND_REMOVE_KEYBOARD);
+
+                    device_waveIn.Dispose();
+                };
+                device_waveIn.StartRecording();
+
+                if (botClient != null && callbackQuery != null)
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "🔴🎤 در حال ضبط صدا به مدت " + record_Seconds.ToString() + " ثانیه...", true);
+                else
+                    return false;
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                device_waveIn?.Dispose();
+                if (botClient != null && callbackQuery != null)
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ خطا در پردازش دستور.\n\n" + ex.Message, true);
+                return false;
+            }
+        }
+
+        bool busy = false;
+        protected async Task<bool> IoT_Bot_CaptureScreenShot_Camera_Async(long chatID, int devIndex_Camera = 0, int numberOfShots = 1, CallbackQuery? callbackQuery = null)
+        {
+            if (botClient == null || busy)
+                return false;
+
+            int numShots = numberOfShots;
+
+            try
+            {
+                filterInfoCollection_Cameras = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+
+                if (videoCaptureDevice != null)
+                    videoCaptureDevice.SignalToStop();
+
+                videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection_Cameras[devIndex_Camera].MonikerString);
+                async void videoCaptureDevice_NewFrame(object? sender, NewFrameEventArgs e)
+                {
+                    busy = true;
+
+                    videoCaptureDevice.NewFrame -= videoCaptureDevice_NewFrame;
+
+                    Bitmap? frameBmp = (Bitmap)e.Frame.Clone();
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        using (FileStream fs = new FileStream(Environment.CurrentDirectory + @"\snapshot.png", FileMode.Create, FileAccess.ReadWrite))
+                        {
+                            frameBmp.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+                            byte[] buffer = memoryStream.ToArray();
+                            fs.Write(buffer, 0, buffer.Length);
+                        }
+                    }
+
+                    FileStream fileStream = new FileStream(Environment.CurrentDirectory + @"\snapshot.png", FileMode.Open, FileAccess.Read);
+                    await botClient.SendTextMessageAsync(chatID, "🔃 در حال بارگذاری تصویر...\n🙏 لطفاً شکیبا باشید.");
+                    await botClient.SendPhotoAsync(chatID, new Telegram.Bot.Types.InputFiles.InputOnlineFile(fileStream, "Snapshot_" + filterInfoCollection_Cameras[devIndex_Camera].Name + ".png"), "تصویر ضبط شده توسط دوربین: " + filterInfoCollection_Cameras[devIndex_Camera].Name + "\n" + DateTime.Now.ToString(), Telegram.Bot.Types.Enums.ParseMode.Html, null, false, true, null, true, _COMMAND_REMOVE_KEYBOARD);
+
+                    fileStream.Close();
+
+                    numShots--;
+                    if (numShots > 0)
+                        videoCaptureDevice.NewFrame += videoCaptureDevice_NewFrame;
+                    else
+                    {
+                        videoCaptureDevice.SignalToStop();
+                        busy = false;
+                    }
+                }
+                videoCaptureDevice.NewFrame += videoCaptureDevice_NewFrame;
+                videoCaptureDevice.Start();
+
+                if (callbackQuery != null)
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "درخواست ضبط تصویر با موفقیت ارسال شد.", true);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                videoCaptureDevice?.Stop();
+                if(callbackQuery != null)
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ خطا در پردازش دستور.\n\n" + ex.Message, true);
+                return false;
+            }
         }
     }
 }
