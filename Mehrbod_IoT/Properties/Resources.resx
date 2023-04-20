@@ -118,50 +118,56 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="img_SerialPort_BaudRate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort_BaudRate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="obj_PIR_Triggered" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\obj_PIR_Triggered.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Exit_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Exit_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Sync" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Sync.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="img_Internet1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_Internet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="img_SerialPort_DataBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort_DataBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ico_SerialPort_AutoConnect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ico_SerialPort_AutoConnect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="objects_BlueLED_Off1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="img_SerialPort" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="img_SerialPort_Parity" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort_Parity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="img_SerialPort_StopBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort_StopBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ico_SerialPort_Connect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ico_SerialPort_Connect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ico_NO_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ico_NO_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="img_SerialPort_Name" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_SerialPort_Name.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="obj_PIR_Idle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\obj_PIR_Idle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_WWW_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\icon_WWW_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ico_Settings_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ico_Settings_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_Camera" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Camera.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_Internet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_Internet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ico_OK_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\ico_OK_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="img_Internet" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\img_Internet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_Microphone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Microphone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Save_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Save_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_SerialPort_BaudRate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort_BaudRate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_SerialPort_DataBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort_DataBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_SerialPort_StopBits" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort_StopBits.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Camera_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Camera_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_GreenLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_GreenLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Speaker_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Speaker_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ico_Telegram_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\ico_Telegram_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -169,31 +175,97 @@
   <data name="objects_GreenLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\objects_GreenLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="obj_PIR_Idle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\obj_PIR_Idle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="objects_BlueLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="objects_RedLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_RedLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="img_SerialPort_Handshake" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\img_SerialPort_Handshake.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Devices" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Devices.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_SerialPort" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_RedLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_RedLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Load_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Load_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Exit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ico_Settings_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_Settings_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Load" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Load.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="img_SerialPort_Name" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort_Name.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Mehrbod_IoT_Logo_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Mehrbod_IoT_Logo_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="obj_PIR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\obj_PIR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="obj_PIR_Triggered" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\obj_PIR_Triggered.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="menu_Save" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Microphone_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Microphone_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Speaker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Speaker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="objects_BlueLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\objects_BlueLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="objects_GreenLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_GreenLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="objects_BlueLED_Off1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="objects_RedLED_On" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\objects_RedLED_On.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="img_SerialPort_Parity" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\img_SerialPort_Parity.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ico_SerialPort_AutoConnect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_SerialPort_AutoConnect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ico_SerialPort_Connect_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_SerialPort_Connect_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Mehrbod_IoT_Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Mehrbod_IoT_Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Sync_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Sync_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_BlueLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_BlueLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_Devices_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_Devices_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ico_NO_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ico_NO_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="objects_RedLED_Off" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\objects_RedLED_Off.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_LightBulb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_LightBulb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_LightBulb_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_LightBulb_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_PIR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_PIR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_PIR_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_PIR_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_WS2812" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_WS2812.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="menu_WS2812_30x30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\menu_WS2812_30x30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

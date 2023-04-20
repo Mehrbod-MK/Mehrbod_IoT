@@ -6,7 +6,17 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Images\Mehrbod_IoT_Logo.ico</ApplicationIcon>
+    <Title>Mehrbod_IoT MiddleWare</Title>
+    <Authors>Mehrbod Molla Kazemi</Authors>
+    <Description>Mehrbod Molla Kazemi's Internet of Things (IoT) middleware</Description>
+    <Copyright>Copyright (C) MelaTronX (Mehrbod M.K.) 2023</Copyright>
+    <PackageIcon>Mehrbod_IoT_Logo.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Images\Mehrbod_IoT_Logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AForge.Video" Version="2.2.5" />
@@ -29,6 +39,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\Mehrbod_IoT_Logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

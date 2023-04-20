@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IoT_ControlPanel));
             this.groupBox_Settings_SerialPort = new System.Windows.Forms.GroupBox();
             this.label_SerialPort_Handshake = new System.Windows.Forms.Label();
             this.label_SerialPort_Parity = new System.Windows.Forms.Label();
@@ -125,6 +126,8 @@
             this.ذخیرهپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.بازآوریپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.حذفپیکربندیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.خروجToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.دستگاهToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.تازهسازیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -1384,33 +1387,60 @@
             this.پروندهToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ذخیرهپیکربندیToolStripMenuItem,
             this.بازآوریپیکربندیToolStripMenuItem,
-            this.حذفپیکربندیToolStripMenuItem});
+            this.حذفپیکربندیToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.خروجToolStripMenuItem});
+            this.پروندهToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.Mehrbod_IoT_Logo_30x30;
+            this.پروندهToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.پروندهToolStripMenuItem.Name = "پروندهToolStripMenuItem";
-            this.پروندهToolStripMenuItem.Size = new System.Drawing.Size(59, 34);
+            this.پروندهToolStripMenuItem.Size = new System.Drawing.Size(89, 34);
             this.پروندهToolStripMenuItem.Text = "برنامه";
+            this.پروندهToolStripMenuItem.Click += new System.EventHandler(this.پروندهToolStripMenuItem_Click);
             // 
             // ذخیرهپیکربندیToolStripMenuItem
             // 
+            this.ذخیرهپیکربندیToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Save_30x30;
+            this.ذخیرهپیکربندیToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ذخیرهپیکربندیToolStripMenuItem.Name = "ذخیرهپیکربندیToolStripMenuItem";
             this.ذخیرهپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.ذخیرهپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.ذخیرهپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(263, 36);
             this.ذخیرهپیکربندیToolStripMenuItem.Text = "ذخیره پیکربندی";
+            this.ذخیرهپیکربندیToolStripMenuItem.Click += new System.EventHandler(this.ذخیرهپیکربندیToolStripMenuItem_Click);
             // 
             // بازآوریپیکربندیToolStripMenuItem
             // 
+            this.بازآوریپیکربندیToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Load_30x30;
+            this.بازآوریپیکربندیToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.بازآوریپیکربندیToolStripMenuItem.Name = "بازآوریپیکربندیToolStripMenuItem";
             this.بازآوریپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-            this.بازآوریپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.بازآوریپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(263, 36);
             this.بازآوریپیکربندیToolStripMenuItem.Text = "بازآوری پیکربندی";
+            this.بازآوریپیکربندیToolStripMenuItem.Click += new System.EventHandler(this.بازآوریپیکربندیToolStripMenuItem_Click);
             // 
             // حذفپیکربندیToolStripMenuItem
             // 
             this.حذفپیکربندیToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.ico_NO_30x30;
+            this.حذفپیکربندیToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.حذفپیکربندیToolStripMenuItem.Name = "حذفپیکربندیToolStripMenuItem";
             this.حذفپیکربندیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Delete)));
-            this.حذفپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.حذفپیکربندیToolStripMenuItem.Size = new System.Drawing.Size(263, 36);
             this.حذفپیکربندیToolStripMenuItem.Text = "حذف پیکربندی";
             this.حذفپیکربندیToolStripMenuItem.Click += new System.EventHandler(this.حذفپیکربندیToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(260, 6);
+            // 
+            // خروجToolStripMenuItem
+            // 
+            this.خروجToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Exit_30x30;
+            this.خروجToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.خروجToolStripMenuItem.Name = "خروجToolStripMenuItem";
+            this.خروجToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.خروجToolStripMenuItem.Size = new System.Drawing.Size(263, 36);
+            this.خروجToolStripMenuItem.Text = "خروج";
+            this.خروجToolStripMenuItem.Click += new System.EventHandler(this.خروجToolStripMenuItem_Click);
             // 
             // دستگاهToolStripMenuItem
             // 
@@ -1424,45 +1454,55 @@
             this.ماژولتولیدرنگWS2812ToolStripMenuItem,
             this.چراغهاToolStripMenuItem,
             this.حسگرتشخیصحرکتPIRToolStripMenuItem});
+            this.دستگاهToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Devices_30x30;
+            this.دستگاهToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.دستگاهToolStripMenuItem.Name = "دستگاهToolStripMenuItem";
-            this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(83, 34);
+            this.دستگاهToolStripMenuItem.Size = new System.Drawing.Size(113, 34);
             this.دستگاهToolStripMenuItem.Text = "دستگاه‌ها";
             // 
             // تازهسازیToolStripMenuItem
             // 
+            this.تازهسازیToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Sync_30x30;
+            this.تازهسازیToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.تازهسازیToolStripMenuItem.Name = "تازهسازیToolStripMenuItem";
             this.تازهسازیToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.تازهسازیToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.تازهسازیToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.تازهسازیToolStripMenuItem.Text = "تازه‌سازی و هماهنگی";
             this.تازهسازیToolStripMenuItem.Click += new System.EventHandler(this.تازهسازیToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(280, 6);
             // 
             // دوربینهاToolStripMenuItem
             // 
+            this.دوربینهاToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Camera_30x30;
+            this.دوربینهاToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.دوربینهاToolStripMenuItem.Name = "دوربینهاToolStripMenuItem";
-            this.دوربینهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.دوربینهاToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.دوربینهاToolStripMenuItem.Text = "دوربین‌ها";
             // 
             // بلندگوهاToolStripMenuItem
             // 
+            this.بلندگوهاToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Speaker_30x30;
+            this.بلندگوهاToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.بلندگوهاToolStripMenuItem.Name = "بلندگوهاToolStripMenuItem";
-            this.بلندگوهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.بلندگوهاToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.بلندگوهاToolStripMenuItem.Text = "بلندگوها";
             // 
             // میکروفونهاToolStripMenuItem
             // 
+            this.میکروفونهاToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_Microphone_30x30;
+            this.میکروفونهاToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.میکروفونهاToolStripMenuItem.Name = "میکروفونهاToolStripMenuItem";
-            this.میکروفونهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.میکروفونهاToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.میکروفونهاToolStripMenuItem.Text = "میکروفون‌ها";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(270, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(280, 6);
             // 
             // ماژولتولیدرنگWS2812ToolStripMenuItem
             // 
@@ -1470,8 +1510,10 @@
             this.انتخابرنگپیکسلToolStripMenuItem,
             this.پرکردنصفحهToolStripMenuItem,
             this.پاککردنصفحهToolStripMenuItem});
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_WS2812_30x30;
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.ماژولتولیدرنگWS2812ToolStripMenuItem.Name = "ماژولتولیدرنگWS2812ToolStripMenuItem";
-            this.ماژولتولیدرنگWS2812ToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.ماژولتولیدرنگWS2812ToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.ماژولتولیدرنگWS2812ToolStripMenuItem.Text = "ماژول تولید رنگ WS2812";
             // 
             // انتخابرنگپیکسلToolStripMenuItem
@@ -1515,8 +1557,10 @@
             this.قرمزToolStripMenuItem,
             this.سبزToolStripMenuItem,
             this.آبیToolStripMenuItem});
+            this.چراغهاToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_LightBulb_30x30;
+            this.چراغهاToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.چراغهاToolStripMenuItem.Name = "چراغهاToolStripMenuItem";
-            this.چراغهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.چراغهاToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.چراغهاToolStripMenuItem.Text = "چراغ‌ها";
             // 
             // قرمزToolStripMenuItem
@@ -1547,14 +1591,16 @@
             // 
             this.حسگرتشخیصحرکتPIRToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.فعالToolStripMenuItem});
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.Image = global::Mehrbod_IoT.Properties.Resources.menu_PIR_30x30;
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.حسگرتشخیصحرکتPIRToolStripMenuItem.Name = "حسگرتشخیصحرکتPIRToolStripMenuItem";
-            this.حسگرتشخیصحرکتPIRToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.حسگرتشخیصحرکتPIRToolStripMenuItem.Size = new System.Drawing.Size(283, 36);
             this.حسگرتشخیصحرکتPIRToolStripMenuItem.Text = "حسگر تشخیص حرکت (PIR)";
             // 
             // فعالToolStripMenuItem
             // 
             this.فعالToolStripMenuItem.Name = "فعالToolStripMenuItem";
-            this.فعالToolStripMenuItem.Size = new System.Drawing.Size(131, 26);
+            this.فعالToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.فعالToolStripMenuItem.Text = "فعال؟";
             this.فعالToolStripMenuItem.Click += new System.EventHandler(this.فعالToolStripMenuItem_Click);
             // 
@@ -1573,13 +1619,13 @@
             // شمارهتلفنهایمجازToolStripMenuItem
             // 
             this.شمارهتلفنهایمجازToolStripMenuItem.Name = "شمارهتلفنهایمجازToolStripMenuItem";
-            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(220, 26);
+            this.شمارهتلفنهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.شمارهتلفنهایمجازToolStripMenuItem.Text = "شماره تلفن‌های مجاز";
             // 
             // چتهایمجازToolStripMenuItem
             // 
             this.چتهایمجازToolStripMenuItem.Name = "چتهایمجازToolStripMenuItem";
-            this.چتهایمجازToolStripMenuItem.Size = new System.Drawing.Size(220, 26);
+            this.چتهایمجازToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.چتهایمجازToolStripMenuItem.Text = "چت‌های مجاز";
             // 
             // groupBox_Reports
@@ -1621,6 +1667,7 @@
             this.Controls.Add(this.menuStrip_MehrodIoT_MainMenu);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip_MehrodIoT_MainMenu;
             this.MaximizeBox = false;
             this.Name = "IoT_ControlPanel";
@@ -1628,6 +1675,7 @@
             this.RightToLeftLayout = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "مهربد ملاکاظمی خوبده - پنل اینترنت اشیاء";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IoT_ControlPanel_FormClosing);
             this.Load += new System.EventHandler(this.IoT_ControlPanel_Load);
             this.groupBox_Settings_SerialPort.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_Handshake)).EndInit();
@@ -1778,5 +1826,7 @@
         private ToolStripMenuItem چتهایمجازToolStripMenuItem;
         private ToolStripMenuItem بلندگوهاToolStripMenuItem;
         private ToolStripMenuItem میکروفونهاToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem خروجToolStripMenuItem;
     }
 }

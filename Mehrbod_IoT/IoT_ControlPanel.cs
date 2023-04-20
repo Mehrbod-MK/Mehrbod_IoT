@@ -2303,6 +2303,33 @@ namespace Mehrbod_IoT
                 return null;
         }
 
+        private void ذخیرهپیکربندیToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IoT_Save_Profile(true);
+        }
+
+        private void بازآوریپیکربندیToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IoT_Load_Profile(false);
+        }
+
+        private void IoT_ControlPanel_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+            device_waveIn?.Dispose();
+            device_waveOut?.Dispose();
+        }
+
+        private void خروجToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void پروندهToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_LEDs_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
         {
             string prompt_LEDsCP = "🔴🟢🔵 پنل کنترل چراغ‌ها\n\n";
