@@ -35,7 +35,6 @@
             this.label_SerialPort_DataBits = new System.Windows.Forms.Label();
             this.label_SerialPort_PortName = new System.Windows.Forms.Label();
             this.label_SerialPort_StopBits = new System.Windows.Forms.Label();
-            this.button_SerialPort_AutoConnect = new System.Windows.Forms.Button();
             this.button_SerialPort_Connect = new System.Windows.Forms.Button();
             this.button_SerialPort_Settings = new System.Windows.Forms.Button();
             this.pictureBox_Img_SerialPort_Handshake = new System.Windows.Forms.PictureBox();
@@ -130,6 +129,8 @@
             this.تازهسازیToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.دوربینهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.بلندگوهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.میکروفونهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ماژولتولیدرنگWS2812ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.انتخابرنگپیکسلToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,8 +148,6 @@
             this.چتهایمجازToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Reports = new System.Windows.Forms.GroupBox();
             this.textBox_Log = new System.Windows.Forms.TextBox();
-            this.بلندگوهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.میکروفونهاToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_Settings_SerialPort.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_Handshake)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Img_SerialPort_StopBits)).BeginInit();
@@ -178,7 +177,6 @@
             this.groupBox_Settings_SerialPort.Controls.Add(this.label_SerialPort_DataBits);
             this.groupBox_Settings_SerialPort.Controls.Add(this.label_SerialPort_PortName);
             this.groupBox_Settings_SerialPort.Controls.Add(this.label_SerialPort_StopBits);
-            this.groupBox_Settings_SerialPort.Controls.Add(this.button_SerialPort_AutoConnect);
             this.groupBox_Settings_SerialPort.Controls.Add(this.button_SerialPort_Connect);
             this.groupBox_Settings_SerialPort.Controls.Add(this.button_SerialPort_Settings);
             this.groupBox_Settings_SerialPort.Controls.Add(this.pictureBox_Img_SerialPort_Handshake);
@@ -259,22 +257,6 @@
             this.label_SerialPort_StopBits.Text = "-";
             this.label_SerialPort_StopBits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // button_SerialPort_AutoConnect
-            // 
-            this.button_SerialPort_AutoConnect.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button_SerialPort_AutoConnect.BackColor = System.Drawing.Color.Yellow;
-            this.button_SerialPort_AutoConnect.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button_SerialPort_AutoConnect.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_SerialPort_AutoConnect.Image = global::Mehrbod_IoT.Properties.Resources.ico_SerialPort_AutoConnect_30x30;
-            this.button_SerialPort_AutoConnect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button_SerialPort_AutoConnect.Location = new System.Drawing.Point(154, 157);
-            this.button_SerialPort_AutoConnect.Name = "button_SerialPort_AutoConnect";
-            this.button_SerialPort_AutoConnect.Size = new System.Drawing.Size(112, 43);
-            this.button_SerialPort_AutoConnect.TabIndex = 9;
-            this.button_SerialPort_AutoConnect.Text = "خودکار";
-            this.button_SerialPort_AutoConnect.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button_SerialPort_AutoConnect.UseVisualStyleBackColor = false;
-            // 
             // button_SerialPort_Connect
             // 
             this.button_SerialPort_Connect.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -285,7 +267,7 @@
             this.button_SerialPort_Connect.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button_SerialPort_Connect.Location = new System.Drawing.Point(8, 157);
             this.button_SerialPort_Connect.Name = "button_SerialPort_Connect";
-            this.button_SerialPort_Connect.Size = new System.Drawing.Size(140, 43);
+            this.button_SerialPort_Connect.Size = new System.Drawing.Size(258, 43);
             this.button_SerialPort_Connect.TabIndex = 8;
             this.button_SerialPort_Connect.Text = "اتصال";
             this.button_SerialPort_Connect.UseVisualStyleBackColor = false;
@@ -1465,6 +1447,18 @@
             this.دوربینهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
             this.دوربینهاToolStripMenuItem.Text = "دوربین‌ها";
             // 
+            // بلندگوهاToolStripMenuItem
+            // 
+            this.بلندگوهاToolStripMenuItem.Name = "بلندگوهاToolStripMenuItem";
+            this.بلندگوهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.بلندگوهاToolStripMenuItem.Text = "بلندگوها";
+            // 
+            // میکروفونهاToolStripMenuItem
+            // 
+            this.میکروفونهاToolStripMenuItem.Name = "میکروفونهاToolStripMenuItem";
+            this.میکروفونهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.میکروفونهاToolStripMenuItem.Text = "میکروفون‌ها";
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -1529,7 +1523,7 @@
             // 
             this.قرمزToolStripMenuItem.ForeColor = System.Drawing.Color.Red;
             this.قرمزToolStripMenuItem.Name = "قرمزToolStripMenuItem";
-            this.قرمزToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.قرمزToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.قرمزToolStripMenuItem.Text = "قرمز";
             this.قرمزToolStripMenuItem.Click += new System.EventHandler(this.قرمزToolStripMenuItem_Click);
             // 
@@ -1537,7 +1531,7 @@
             // 
             this.سبزToolStripMenuItem.ForeColor = System.Drawing.Color.Green;
             this.سبزToolStripMenuItem.Name = "سبزToolStripMenuItem";
-            this.سبزToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.سبزToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.سبزToolStripMenuItem.Text = "سبز";
             this.سبزToolStripMenuItem.Click += new System.EventHandler(this.سبزToolStripMenuItem_Click);
             // 
@@ -1545,7 +1539,7 @@
             // 
             this.آبیToolStripMenuItem.ForeColor = System.Drawing.Color.Blue;
             this.آبیToolStripMenuItem.Name = "آبیToolStripMenuItem";
-            this.آبیToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
+            this.آبیToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.آبیToolStripMenuItem.Text = "آبی";
             this.آبیToolStripMenuItem.Click += new System.EventHandler(this.آبیToolStripMenuItem_Click);
             // 
@@ -1614,18 +1608,6 @@
             this.textBox_Log.TabIndex = 17;
             this.textBox_Log.WordWrap = false;
             // 
-            // بلندگوهاToolStripMenuItem
-            // 
-            this.بلندگوهاToolStripMenuItem.Name = "بلندگوهاToolStripMenuItem";
-            this.بلندگوهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
-            this.بلندگوهاToolStripMenuItem.Text = "بلندگوها";
-            // 
-            // میکروفونهاToolStripMenuItem
-            // 
-            this.میکروفونهاToolStripMenuItem.Name = "میکروفونهاToolStripMenuItem";
-            this.میکروفونهاToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
-            this.میکروفونهاToolStripMenuItem.Text = "میکروفون‌ها";
-            // 
             // IoT_ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -1686,7 +1668,6 @@
         private PictureBox pictureBox_Img_SerialPort_Handshake;
         private Button button_SerialPort_Settings;
         private Button button_SerialPort_Connect;
-        private Button button_SerialPort_AutoConnect;
         private Label label_SerialPort_PortName;
         private Label label_SerialPort_Handshake;
         private Label label_SerialPort_Parity;
