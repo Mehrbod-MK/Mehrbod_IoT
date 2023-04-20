@@ -1467,6 +1467,16 @@ namespace Mehrbod_IoT
             {
                 await IoT_Bot_Prompt_Cameras_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
+            // Main Menu -> Display Microphones control panel.
+            else if (args[0] == "MENU_DISPLAY_PANEL_MICROPHONES")
+            {
+                await IoT_Bot_Prompt_Microphones_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // Main Menu -> Display Speakers control panel.
+            else if (args[0] == "MENU_DISPLAY_PANEL_SPEAKERS")
+            {
+                await IoT_Bot_Prompt_Speakers_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
 
             // WS2812 -> Set Background with current color.
             else if (args[0] == "WS2812_SET_BKG")
@@ -1635,9 +1645,8 @@ namespace Mehrbod_IoT
                     await IoT_Bot_Prompt_Cameras_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
                 }
                 else
-                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ این دستگاه دوربین وجود ندارد یا اتصال آن قطع شده است.");
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ دوربین وجود ندارد یا اتصال آن قطع شده است.");
             }
-
             // Camera - Send a test screenshot from specified Camera Device index.
             else if (args[0] == "CAMERA_TEST_INDEX")
             {
@@ -1649,7 +1658,68 @@ namespace Mehrbod_IoT
                     await IoT_Bot_CaptureScreenShot_Camera_Async(callbackQuery.Message.Chat.Id, camInd, 1, callbackQuery);
                 }
                 else
-                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ این دستگاه دوربین وجود ندارد یا اتصال آن قطع شده است.");
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ دوربین وجود ندارد یا اتصال آن قطع شده است.");
+            }
+
+            // Microphone - Set default Microphone device at specified index.
+            else if (args[0] == "MICROPHONE_SET_INDEX")
+            {
+                int.TryParse(args[1], out int micInd);
+
+                if (micInd >= 0 && micInd < WaveIn.DeviceCount)
+                {
+                    deviceIndex_Microphone = micInd;
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "میکروفون پیش‌فرض به " + WaveIn.GetCapabilities(micInd).ProductName + " تغییر یافت.");
+                    Invoke(() => { Initialize_ExternalDevices_RecordingDevices(); });
+                    await IoT_Bot_Prompt_Microphones_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+                }
+                else
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ میکروفون وجود ندارد یا اتصال آن قطع شده است.");
+            }
+            // Microphone - Test by recording a sample voice from a specific Microphone device index.
+            else if (args[0] == "MICROPHONE_TEST_INDEX")
+            {
+                int.TryParse(args[1], out int micInd);
+
+                if (micInd >= 0 && micInd < WaveIn.DeviceCount)
+                {
+                    await IoT_Bot_RecordAudio_Async(callbackQuery.Message.Chat.Id, 5, micInd, callbackQuery);
+                }
+                else
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ میکروفون وجود ندارد یا اتصال آن قطع شده است.");
+            }
+
+            // Speaker - Set default Speaker device at specified index.
+            else if (args[0] == "SPEAKER_SET_INDEX")
+            {
+                int.TryParse(args[1], out int spkInd);
+
+                if (spkInd >= 0 && spkInd < WaveOut.DeviceCount)
+                {
+                    deviceIndex_Speaker = spkInd;
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "بلندگوی پیش‌فرض به " + WaveOut.GetCapabilities(spkInd).ProductName + " تغییر یافت.");
+                    Invoke(() => { Initialize_ExternalDevices_PlaybackDevices(); });
+                    await IoT_Bot_Prompt_Speakers_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+                }
+                else
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ بلندگو وجود ندارد یا اتصال آن قطع شده است.");
+            }
+            // Camera - Send a test screenshot from specified Camera Device index.
+            else if (args[0] == "SPEAKER_TEST_INDEX")
+            {
+                int.TryParse(args[1], out int spkInd);
+
+                if (spkInd >= 0 && spkInd < WaveOut.DeviceCount)
+                {
+                    device_waveOut = new WaveOutEvent() { DeviceNumber = spkInd, Volume = 0.5f };
+                    var sigGenerator = new SignalGenerator() { Frequency = 476, Gain = 0.2, Type = SignalGeneratorType.Sin }.Take(TimeSpan.FromSeconds(3));
+                    device_waveOut.Init(sigGenerator);
+                    device_waveOut.Play();
+
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "موج سینوسی 476 هرتز از دستگاه"+ " به مدت 3 ثانیه پخش می‌شود...");
+                }
+                else
+                    await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "❌ بلندگو وجود ندارد یا اتصال آن قطع شده است.");
             }
         }
 
@@ -2043,7 +2113,7 @@ namespace Mehrbod_IoT
             }
         }
 
-        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_Cameras_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery callbackQuery = null)
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_Cameras_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
         {
             string prompt_CamerasCP = "📷 پنل دستگاه‌های ضبط تصویر\n\n";
             prompt_CamerasCP += "👈 با کلیک بر روی نام یک دستگاه، آن را به صورت پیش‌فرض انتخاب می‌کنید. این دستگاه در هر زمان خطر، برای شما اطلاعات مورد نیاز را ارسال خواهد کرد.\n\n";
@@ -2077,6 +2147,84 @@ namespace Mehrbod_IoT
                     return await botClient.SendTextMessageAsync(chatID, prompt_CamerasCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_Cameras));
                 else if (callbackQuery.Message != null)
                     return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_CamerasCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_Cameras));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_Microphones_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_MicrophonesCP = "🎤 پنل دستگاه‌های ضبط صدا\n\n";
+            prompt_MicrophonesCP += "👈 با کلیک بر روی نام یک دستگاه، آن را به صورت پیش‌فرض انتخاب می‌کنید. این دستگاه در هر زمان خطر، برای شما اطلاعات مورد نیاز را ارسال خواهد کرد.\n\n";
+            prompt_MicrophonesCP += "👇 همچنین، می‌توانید اقدامات دیگری را بر روی دستگاه مورد نظر انجام دهید.";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_Microphones = new List<List<InlineKeyboardButton>>();
+
+            for (int i = 0; i < WaveIn.DeviceCount; i++)
+            {
+                string deviceName = WaveIn.GetCapabilities(i).ProductName;
+                if (deviceIndex_Microphone == i)
+                    deviceName = "✅🎙 " + deviceName;
+                else
+                    deviceName = "🎙 " + deviceName;
+
+                inlineKeyboard_Microphones.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData(deviceName, "MICROPHONE_SET_INDEX~" + i.ToString()),
+                    InlineKeyboardButton.WithCallbackData("🗣 آزمایش", "MICROPHONE_TEST_INDEX~" + i.ToString()),
+                });
+            }
+            inlineKeyboard_Microphones.Add(new List<InlineKeyboardButton>()
+            {
+                InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+            });
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_MicrophonesCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_Microphones));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_MicrophonesCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_Microphones));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_Speakers_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_SpeakersCP = "🔈 پنل دستگاه‌های پخش صدا\n\n";
+            prompt_SpeakersCP += "👈 با کلیک بر روی نام یک دستگاه، آن را به صورت پیش‌فرض انتخاب می‌کنید. این دستگاه در هر زمان خطر، برای شما اطلاعات مورد نیاز را ارسال خواهد کرد.\n\n";
+            prompt_SpeakersCP += "👇 همچنین، می‌توانید اقدامات دیگری را بر روی دستگاه مورد نظر انجام دهید.";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_Speakers = new List<List<InlineKeyboardButton>>();
+
+            for (int i = 0; i < WaveOut.DeviceCount; i++)
+            {
+                string deviceName = WaveOut.GetCapabilities(i).ProductName;
+                if (deviceIndex_Speaker == i)
+                    deviceName = "✅📸 " + deviceName;
+                else
+                    deviceName = "📸 " + deviceName;
+
+                inlineKeyboard_Speakers.Add(new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData(deviceName, "SPEAKER_SET_INDEX~" + i.ToString()),
+                    InlineKeyboardButton.WithCallbackData("👂 آزمایش", "SPEAKER_TEST_INDEX~" + i.ToString()),
+                });
+            }
+            inlineKeyboard_Speakers.Add(new List<InlineKeyboardButton>()
+            {
+                InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+            });
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_SpeakersCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_Speakers));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_SpeakersCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_Speakers));
                 else return null;
             }
             else
