@@ -1462,6 +1462,11 @@ namespace Mehrbod_IoT
             {
                 await IoT_Bot_Prompt_SSD1306_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
+            // Main Menu -> Display LEDs devices Control Panel.
+            else if (args[0] == "MENU_DISPLAY_PANEL_LEDS")
+            {
+                await IoT_Bot_Prompt_LEDs_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
             // Main Menu -> Display Cameras control panel.
             else if (args[0] == "MENU_DISPLAY_PANEL_CAMERAS")
             {
@@ -1554,6 +1559,33 @@ namespace Mehrbod_IoT
                     device_waveOut = null;
                 }                    
                 await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "هشدار با موفقیت متوقف شد.", true);
+            }
+
+            // LED - Turn On (R/G/B).
+            else if (args[0] == "LED_TURN_ON")
+            {
+                if (args[1] == "RED")
+                    await IoT_SerialPort_SendData_Async("LED RED TURN_ON");
+                else if (args[1] == "GREEN")
+                    await IoT_SerialPort_SendData_Async("LED GREEN TURN_ON");
+                else if (args[1] == "BLUE")
+                    await IoT_SerialPort_SendData_Async("LED BLUE TURN_ON");
+
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "عملیات با موفقیت انجام شد.");
+                await IoT_Bot_Prompt_LEDs_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
+            }
+            // LED - Turn Off (R/G/B).
+            else if (args[0] == "LED_TURN_OFF")
+            {
+                if (args[1] == "RED")
+                    await IoT_SerialPort_SendData_Async("LED RED TURN_OFF");
+                else if (args[1] == "GREEN")
+                    await IoT_SerialPort_SendData_Async("LED GREEN TURN_OFF");
+                else if (args[1] == "BLUE")
+                    await IoT_SerialPort_SendData_Async("LED BLUE TURN_OFF");
+
+                await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "عملیات با موفقیت انجام شد.");
+                await IoT_Bot_Prompt_LEDs_CP_Async(callbackQuery.Message.Chat.Id, callbackQuery.Message, callbackQuery);
             }
 
             // Callback -> Set Color Channel Value.
@@ -2225,6 +2257,68 @@ namespace Mehrbod_IoT
                     return await botClient.SendTextMessageAsync(chatID, prompt_SpeakersCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_Speakers));
                 else if (callbackQuery.Message != null)
                     return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_SpeakersCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_Speakers));
+                else return null;
+            }
+            else
+                return null;
+        }
+
+        protected async Task<Telegram.Bot.Types.Message?> IoT_Bot_Prompt_LEDs_CP_Async(long chatID, Telegram.Bot.Types.Message message, CallbackQuery? callbackQuery = null)
+        {
+            string prompt_LEDsCP = "🔴🟢🔵 پنل کنترل چراغ‌ها\n\n";
+
+            prompt_LEDsCP += "💡 وضعیت چراغ‌ها و لامپ‌ها:\n";
+            prompt_LEDsCP += "🔴 چراغ قرمز:\t";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_RED))
+                prompt_LEDsCP += "✅ <b>روشن</b>";
+            else
+                prompt_LEDsCP += "❎ <b>خاموش</b>";
+            prompt_LEDsCP += '\n';
+            prompt_LEDsCP += "🟢 چراغ سبز:\t";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_GREEN))
+                prompt_LEDsCP += "✅ <b>روشن</b>";
+            else
+                prompt_LEDsCP += "❎ <b>خاموش</b>";
+            prompt_LEDsCP += '\n';
+            prompt_LEDsCP += "🔵 چراغ آبی:\t";
+            if (device_Flags.HasFlag(IoT_Device_Flags.DEVICE_Flag_OnState_LED_BLUE))
+                prompt_LEDsCP += "✅ <b>روشن</b>";
+            else
+                prompt_LEDsCP += "❎ <b>خاموش</b>";
+            prompt_LEDsCP += '\n';
+
+            prompt_LEDsCP += "👇 با استفاده از کلیدهای ذیل، می‌توانید چراغ‌ها را خاموش/روشن کنید.";
+
+            List<List<InlineKeyboardButton>> inlineKeyboard_LEDs = new List<List<InlineKeyboardButton>>()
+            {
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🔴✅ قرمز روشن", "LED_TURN_ON~RED"),
+                    InlineKeyboardButton.WithCallbackData("🔴❎ قرمز خاموش", "LED_TURN_OFF~RED"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🟢✅ سبز روشن", "LED_TURN_ON~GREEN"),
+                    InlineKeyboardButton.WithCallbackData("🟢❎ سبز خاموش", "LED_TURN_OFF~GREEN"),
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("🔵✅ آبی روشن", "LED_TURN_ON~BLUE"),
+                    InlineKeyboardButton.WithCallbackData("🔵❎ آبی خاموش", "LED_TURN_OFF~BLUE"),
+                },
+
+                new List<InlineKeyboardButton>()
+                {
+                    InlineKeyboardButton.WithCallbackData("بازگشت به منوی اصلی 👈", "CB_RETURN_TO~MAIN_MENU"),
+                }
+            };
+
+            if (botClient != null)
+            {
+                if (callbackQuery == null)
+                    return await botClient.SendTextMessageAsync(chatID, prompt_LEDsCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, null, true, message.MessageId, true, new InlineKeyboardMarkup(inlineKeyboard_LEDs));
+                else if (callbackQuery.Message != null)
+                    return await botClient.EditMessageTextAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, prompt_LEDsCP, Telegram.Bot.Types.Enums.ParseMode.Html, null, null, new InlineKeyboardMarkup(inlineKeyboard_LEDs));
                 else return null;
             }
             else
