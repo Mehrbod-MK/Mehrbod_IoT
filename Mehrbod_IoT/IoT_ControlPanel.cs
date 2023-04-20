@@ -352,7 +352,7 @@ namespace Mehrbod_IoT
             if(!serialPort_MehrbodIoT.IsOpen)
             {
                 groupBox_Settings_SerialPort.Enabled = false;
-                button_SerialPort_Connect.TextAlign = ContentAlignment.MiddleRight;
+                // button_SerialPort_Connect.TextAlign = ContentAlignment.MiddleRight;
                 button_SerialPort_Connect.Text = "در حال اتصال";
 
                 Task.Run(() => {
@@ -385,12 +385,11 @@ namespace Mehrbod_IoT
                                 groupBox_Reports.Enabled = true;
 
                                 groupBox_Settings_SerialPort.Enabled = true;
-                                button_SerialPort_Connect.TextAlign = ContentAlignment.MiddleRight;
+                                // button_SerialPort_Connect.TextAlign = ContentAlignment.MiddleRight;
                                 button_SerialPort_Connect.Text = "قطع اتصال";
                                 button_SerialPort_Connect.Image = Properties.Resources.ico_NO_30x30;
                                 button_SerialPort_Connect.BackColor = Color.NavajoWhite;
                                 button_SerialPort_Settings.Enabled = false;
-                                button_SerialPort_AutoConnect.Enabled = false;
                             });
                         }
                         else
@@ -406,7 +405,27 @@ namespace Mehrbod_IoT
             }
             else
             {
+                try
+                {
+                    serialPort_MehrbodIoT?.Close();
+                }
+                catch(Exception ex) { }
+                finally
+                {
+                    Invoke(() =>
+                    {
+                        groupBox_Settings_SerialPort.Enabled = true;
+                        button_SerialPort_Connect.TextAlign = ContentAlignment.MiddleCenter;
+                        button_SerialPort_Connect.Text = "اتصال";
+                        button_SerialPort_Connect.Image = Properties.Resources.ico_SerialPort_Connect_30x30;
+                        button_SerialPort_Connect.BackColor = Color.LightGreen;
+                        button_SerialPort_Settings.Enabled = true;
 
+                        groupBox_Settings_Internet.Enabled = false;
+                        groupBox_Things.Enabled = false;
+                        groupBox_Reports.Enabled = false;
+                    });
+                }
             }
         }
 
@@ -553,6 +572,7 @@ namespace Mehrbod_IoT
             if(botClient == null)
             {
                 groupBox_Settings_Internet.Enabled = false;
+                button_SerialPort_Connect.Enabled = false;
                 button_Internet_EstablishConnection.Text = "در حال ارتباط با بستر اینترنت...";
 
                 Task.Run(() =>
@@ -572,6 +592,7 @@ namespace Mehrbod_IoT
 
                             groupBox_Settings_Internet.Enabled = true;
                             textBox_InternetSettings_BotToken.Hide();
+                            button_Internet_EstablishConnection.Hide();
                             button_Internet_EstablishConnection.Image = Properties.Resources.ico_NO_30x30;
                             button_Internet_EstablishConnection.Text = "قطع اتصال وب‌سرور";
                             button_Internet_EstablishConnection.BackColor = Color.NavajoWhite;
@@ -580,6 +601,7 @@ namespace Mehrbod_IoT
                     catch (Exception ex)
                     {
                         groupBox_Settings_Internet.Enabled = true;
+                        button_SerialPort_Connect.Enabled = true;
                         button_Internet_EstablishConnection.Text = "ارسال درخواست HTTPS به وب‌سرور";
 
                         botClient = null;
@@ -589,6 +611,26 @@ namespace Mehrbod_IoT
                             MessageBox.Show("خطا در ارسال درخواست HTTPS به وب‌سرور. جزئیات خطا به شرح ذیل می‌باشد:\n\n" + ex.Message, "خطا در ارتباط با بستر اینترنت!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign);
                         });
                     }
+                });
+            }
+            else
+            {
+                Task.Run(async () =>
+                {
+                    await botClient.CloseAsync();
+                    await botClient.LogOutAsync();
+                    botClient = null;
+
+                    Invoke(() =>
+                    {
+                        button_Internet_EstablishConnection.Text = "ارسال درخواست HTTPS به وب‌سرور";
+                        button_Internet_EstablishConnection.Image = Properties.Resources.icon_WWW_30x30;
+                        button_Internet_EstablishConnection.BackColor = Color.Azure;
+                        button_SerialPort_Connect.Enabled = true;
+                        textBox_InternetSettings_BotToken.Enabled = true;
+                        textBox_InternetSettings_BotToken.Text = "";
+                        textBox_InternetSettings_BotToken.Show();
+                    });
                 });
             }
         }
@@ -1179,13 +1221,11 @@ namespace Mehrbod_IoT
                                 }
 
                                 // In the end, update IoT UI.
-                                if(InvokeRequired)
+                                
+                                Invoke(() =>
                                 {
-                                    Invoke(() =>
-                                    {
-                                        UpdateUI_IoT();
-                                    });
-                                }
+                                    UpdateUI_IoT();
+                                });
                             }
                         }
                     }
